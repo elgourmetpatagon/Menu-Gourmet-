@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Gourmet Patagon - Pedidos</title>
+    <style>
+        :root { --naranja: #e67e22; --crema: #fdfaf4; --texto: #2c3e50; }
+        body { font-family: 'Segoe UI', sans-serif; background-color: var(--crema); color: var(--texto); padding: 15px; }
+        .card { background: white; border-radius: 15px; padding: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); margin-bottom: 20px; border-top: 5px solid var(--naranja); }
+        h1, h2 { text-align: center; color: var(--naranja); margin-top: 0; }
+        label { display: block; margin: 10px 0 5px; font-weight: bold; }
+        input, select, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        .precio { font-weight: bold; color: green; float: right; }
+        .item-menu { border-bottom: 1px solid #eee; padding: 10px 0; }
+        .total-box { background: #2c3e50; color: white; padding: 20px; border-radius: 10px; text-align: center; font-size: 1.2em; position: sticky; bottom: 10px; }
+        button { width: 100%; background: #25d366; color: white; border: none; padding: 15px; border-radius: 10px; font-size: 1.1em; font-weight: bold; margin-top: 10px; cursor: pointer; }
+    </style>
+</head>
+<body>
+
+    <h1>El Gourmet Patagon</h1>
+    <p style="text-align: center;">📍 Coyhaique | 🕒 Pedidos: 10:00 - 12:15</p>
+
+    <div class="card">
+        <h3>Información del Cliente</h3>
+        <label>Nombre:</label>
+        <input type="text" id="nombre" placeholder="Tu nombre">
+        <label>Dirección de Despacho:</label>
+        <input type="text" id="direccion" placeholder="Calle, número y sector">
+    </div>
+
+    <div class="card">
+        <h3>Nuestro Menú</h3>
+        
+        <div class="item-menu">
+            <input type="checkbox" id="menuA" class="opcion-menu" data-precio="6500" data-nombre="Menú A (Pral + Focaccia)">
+            <span>Menú A: Principal + Focaccia</span>
+            <span class="precio">$6.500</span>
+        </div>
+
+        <div class="item-menu">
+            <input type="checkbox" id="menuB" class="opcion-menu" data-precio="7500" data-nombre="Menú B (Entrante + Pral + Focaccia)">
+            <span>Menú B: Entrante + Principal + Focaccia</span>
+            <span class="precio">$7.500</span>
+        </div>
+
+        <div class="item-menu">
+            <input type="checkbox" id="palFrio" class="opcion-menu" data-precio="3500" data-nombre="Pa'l Frío (Crema/Consomé)">
+            <span>Pa'l Frío: Crema o Consomé + Focaccia</span>
+            <span class="precio">$3.500</span>
+        </div>
+
+        <div class="item-menu">
+            <input type="checkbox" id="waffle" class="opcion-menu" data-precio="3500" data-nombre="Waffle Dulce">
+            <span>Waffle: Dulce del día</span>
+            <span class="precio">$3.500</span>
+        </div>
+    </div>
+
+    <div class="card">
+        <h3>Personaliza tu Plato</h3>
+        <label>Si eliges Ensalada, elige 2 Proteínas:</label>
+        <div id="proteinas">
+            <input type="checkbox" class="proteina" value="Suprema Ave"> Suprema Ave<br>
+            <input type="checkbox" class="proteina" value="Duo Lentejas"> Duo Lentejas<br>
+            <input type="checkbox" class="proteina" value="Quinoa Tricolor"> Quinoa Tricolor<br>
+            <input type="checkbox" class="proteina" value="Huevo Sancochado"> Huevo Sancochado
+        </div>
+
+        <label>Alergias o Notas Especiales:</label>
+        <textarea id="notas" rows="3" placeholder="Ej: Sin cebolla, alérgico a los frutos secos..."></textarea>
+    </div>
+
+    <div class="total-box">
+        Total: $<span id="total">0</span>
+        <button onclick="enviarPedido()">Confirmar y enviar Comanda</button>
+    </div>
+
+    <script>
+        const checkboxes = document.querySelectorAll('.opcion-menu');
+        const totalDisplay = document.getElementById('total');
+
+        checkboxes.forEach(box => {
+            box.addEventListener('change', () => {
+                let total = 0;
+                checkboxes.forEach(b => {
+                    if(b.checked) total += parseInt(b.dataset.precio);
+                });
+                totalDisplay.innerText = total.toLocaleString('es-CL');
+            });
+        });
+
+        function enviarPedido() {
+            const nombre = document.getElementById('nombre').value;
+            const direccion = document.getElementById('direccion').value;
+            const notas = document.getElementById('notas').value;
+            let pedidos = "";
+            let total = 0;
+
+            checkboxes.forEach(b => {
+                if(b.checked) {
+                    pedidos += "- " + b.dataset.nombre + "\n";
+                    total += parseInt(b.dataset.precio);
+                }
+            });
+
+            const proteinas = Array.from(document.querySelectorAll('.proteina:checked')).map(p => p.value);
+            
+            if(!nombre || !direccion || total === 0) {
+                alert("Por favor completa nombre, dirección y elige al menos un producto.");
+                return;
+            }
+
+            const mensaje = `*NUEVO PEDIDO - EL GOURMET PATAGON*%0A` +
+                `*Cliente:* ${nombre}%0A` +
+                `*Dirección:* ${direccion}%0A` +
+                `--------------------------%0A` +
+                `*Pedido:*%0A${pedidos}` +
+                (proteinas.length > 0 ? `*Proteínas:* ${proteinas.join(", ")}%0A` : "") +
+                (notas ? `*Notas/Alergias:* ${notas}%0A` : "") +
+                `--------------------------%0A` +
+                `*TOTAL:* $${total.toLocaleString('es-CL')}%0A%0A` +
+                `_Entiendo que mi pedido entra en hoja de ruta con entrega entre 12:45 y 14:00 hrs._`;
+
+            window.open(`https://wa.me/56994004188?text=${mensaje}`);
+        }
+    </script>
+</body>
+</html>
