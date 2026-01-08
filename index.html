@@ -3,171 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pedidos El Gourmet Patagon 🌿</title>
+    <title>Gourmet Patagon - Multi-Pedido</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fcf8f2; margin: 0; padding: 15px; color: #444; }
-        .container { max-width: 500px; margin: 0 auto; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.1); border: 2px solid #e0d5c1; }
-        h1 { text-align: center; color: #b03a2e; margin-bottom: 5px; }
-        .subtitle { text-align: center; font-style: italic; color: #666; margin-bottom: 20px; font-size: 0.9em; }
-        h3 { background-color: #fdebd0; padding: 10px; border-radius: 8px; color: #a04000; font-size: 1.1em; }
-        label { display: block; margin: 10px 0 5px; font-weight: bold; }
-        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ccc; border-radius: 10px; box-sizing: border-box; font-size: 16px; }
-        .option-card { background: #fff; border: 1px solid #eee; padding: 10px; border-radius: 10px; margin-bottom: 10px; transition: 0.3s; }
-        .option-card:active { background: #fdf2e9; }
-        .checkbox-item { display: flex; align-items: center; margin-bottom: 8px; font-weight: normal; }
-        .checkbox-item input { width: auto; margin-right: 12px; transform: scale(1.3); }
-        .total-banner { background: #2c5e2e; color: white; text-align: center; padding: 15px; border-radius: 12px; margin: 20px 0; font-size: 1.4em; font-weight: bold; }
-        .btn-whatsapp { width: 100%; background-color: #25D366; color: white; padding: 18px; border: none; border-radius: 50px; font-size: 1.1em; font-weight: bold; cursor: pointer; box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3); }
-        .hidden { display: none; }
-        .price-tag { color: #b03a2e; font-weight: bold; float: right; }
+        :root { --primary: #e67e22; --dark: #2c3e50; --success: #25d366; }
+        body { font-family: 'Segoe UI', sans-serif; background: #fdfaf6; color: var(--dark); padding: 15px; margin: 0; }
+        .container { max-width: 500px; margin: auto; background: white; padding: 20px; border-radius: 20px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+        .header { text-align: center; border-bottom: 2px solid var(--primary); margin-bottom: 15px; }
+        .step { margin-bottom: 20px; padding: 10px; border: 1px solid #f0f0f0; border-radius: 12px; }
+        h3 { font-size: 0.9rem; color: var(--primary); text-transform: uppercase; margin-top: 0; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 5px 0; border: 1px solid #ccc; border-radius: 8px; box-sizing: border-box; }
+        .grid-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .opt-card { border: 1px solid #ddd; padding: 10px; border-radius: 10px; text-align: center; cursor: pointer; font-size: 0.85rem; }
+        .opt-card input { display: none; }
+        .opt-card:has(input:checked) { border-color: var(--primary); background: #fff5eb; border-width: 2px; }
+        .cart-item { background: #f9f9f9; padding: 10px; margin: 5px 0; border-radius: 8px; font-size: 0.85rem; border-left: 4px solid var(--primary); }
+        .total-box { background: var(--dark); color: white; padding: 15px; border-radius: 12px; text-align: center; font-weight: bold; font-size: 1.1rem; margin: 15px 0; }
+        .btn-add { background: var(--dark); color: white; border: none; padding: 10px; border-radius: 8px; width: 100%; cursor: pointer; font-weight: bold; margin-bottom: 10px; }
+        .btn-send { background: var(--success); color: white; border: none; padding: 18px; border-radius: 12px; width: 100%; font-size: 1.1rem; font-weight: 800; cursor: pointer; }
+        .warning { background: #fff3cd; padding: 8px; border-radius: 8px; font-size: 0.75rem; border-left: 4px solid #ffc107; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>El Gourmet Patagon 🍳</h1>
-    <p class="subtitle">~ Sabores de hogar para disfrutar donde estés ~</p>
-
-    <h3>1. Datos de Entrega 📍</h3>
-    <input type="text" id="nombre" placeholder="¿A qué nombre anotamos?">
-    <textarea id="direccion" rows="2" placeholder="Dirección de despacho"></textarea>
-    
-    <label>Tipo de Servicio:</label>
-    <select id="entrega" onchange="actualizarTotal()">
-        <option value="0">🚗 Retiro en Punto Secreto (Gratis)</option>
-        <option value="2000">🚚 Delivery Centro - Victoria (+$2.000)</option>
-        <option value="3500">🚩 Fuera de Zona (+$3.500)</option>
-    </select>
-
-    <h3>2. ¡Arma tu Combo! 🧩</h3>
-    
-    <div class="option-card">
-        <label class="checkbox-item">
-            <input type="radio" name="main_combo" value="ComboA" onchange="actualizarTotal()"> 
-            🅰️ Menú A: Principal + Focaccia <span class="price-tag">$6.500</span>
-        </label>
+    <div class="header">
+        <h2>🏔️ EL GOURMET PATAGON</h2>
+        <p><i>Cocina Taller - Multi-Pedido</i></p>
     </div>
 
-    <div class="option-card">
-        <label class="checkbox-item">
-            <input type="radio" name="main_combo" value="ComboB" onchange="actualizarTotal()"> 
-            🅱️ Menú B: Entrante + Principal + Focaccia <span class="price-tag">$7.500</span>
-        </label>
-    </div>
-
-    <div id="seleccion_platos" class="hidden">
-        <h3>3. ¿Qué vas a servirte? 🍲</h3>
-        
-        <div id="seccion_entrante" class="hidden">
-            <label>Elige tu Entrante:</label>
-            <select id="entrante_tipo">
-                <option value="Sopita de Ave 🥣">Sopita de Ave 🥣</option>
-                <option value="Mix de Temporada 🥗">Mix de Temporada (Pesto rúcula) 🥗</option>
-            </select>
+    <div class="step">
+        <h3>1. Datos de Entrega</h3>
+        <input type="text" id="nombre" placeholder="Tu Nombre">
+        <input type="text" id="direccion" placeholder="Dirección / Punto de Encuentro">
+        <select id="zona" onchange="renderCart()">
+            <option value="0">Retiro / Centro hasta Victoria ($0)</option>
+            <option value="1500">Sobre Victoria (+$1.500)</option>
+        </select>
+        <div class="warning">
+            <input type="checkbox" id="ruta" checked> Acepto entrega en Hoja de Ruta (12:45-14:00) ✅
         </div>
+    </div>
 
-        <label>Elige tu Principal:</label>
-        <select id="principal_tipo" onchange="toggleEnsalada()">
-            <option value="Pastel de Choclo 🌽">Pastel de Choclo 🌽</option>
-            <option value="La Gran Ensalada 🥗">La Gran Ensalada 🥗</option>
+    <div class="step" style="background: #fffdf9;">
+        <h3>2. Configura un Menú</h3>
+        <div class="grid-options">
+            <label class="opt-card"><input type="radio" name="combo" value="6500" data-name="Menú A"><b>Menú A</b><br>$6.500</label>
+            <label class="opt-card"><input type="radio" name="combo" value="7500" data-name="Menú B"><b>Menú B</b><br>$7.500</label>
+            <label class="opt-card"><input type="radio" name="combo" value="3500" data-name="Pa'l Frío"><b>Pa'l Frío</b><br>$3.500</label>
+            <label class="opt-card"><input type="radio" name="combo" value="3500" data-name="Waffle"><b>Waffle</b><br>$3.500</label>
+        </div>
+        
+        <select id="detalle_plato" style="margin-top:10px;">
+            <option value="Entrante: Sopa/Crema + Principal: Caliente">Sopa + Principal Caliente 🥘</option>
+            <option value="Entrante: Mix Temporada + Principal: Caliente">Mix Ensalada + Principal Caliente 🥘</option>
+            <option value="Principal: La Gran Ensalada">Solo La Gran Ensalada 🥗</option>
         </select>
 
-        <div id="seccion_proteinas" class="hidden" style="background: #f9f9f9; padding: 10px; border-radius: 10px;">
-            <p><strong>Tú decides 2 proteínas:</strong></p>
-            <label class="checkbox-item"><input type="checkbox" class="prot" value="Hummus"> Hummus de Garbanzo 🧆</label>
-            <label class="checkbox-item"><input type="checkbox" class="prot" value="Suprema Ave"> Suprema Ave 🍗</label>
-            <label class="checkbox-item"><input type="checkbox" class="prot" value="Quinoa"> Quinoa Tricolor 🌾</label>
-            <label class="checkbox-item"><input type="checkbox" class="prot" value="Huevo"> Huevo Sancochado 🥚</label>
+        <div id="prot_sec" style="font-size: 0.8rem; margin-top: 5px;">
+            <label><b>Proteínas (Si elegiste Gran Ensalada):</b></label><br>
+            <input type="checkbox" class="prot" value="Ave"> Ave | 
+            <input type="checkbox" class="prot" value="Huevo"> Huevo | 
+            <input type="checkbox" class="prot" value="Quinoa"> Quinoa | 
+            <input type="checkbox" class="prot" value="Legumbre"> Legumbre
         </div>
+        
+        <button class="btn-add" onclick="addToCart()" style="margin-top:10px;">➕ AÑADIR ESTE MENÚ</button>
     </div>
 
-    <h3>4. ¿Algo más? ✨</h3>
-    <div class="option-card">
-        <label class="checkbox-item"><input type="checkbox" id="add_frio" value="3500" onchange="actualizarTotal()"> 🧊 Pa'l Frío (Consomé + Focaccia) <span class="price-tag">+$3.500</span></label>
-        <label class="checkbox-item"><input type="checkbox" id="add_dulce" value="3500" onchange="actualizarTotal()"> 🧇 Waffle Manjar/Frutilla <span class="price-tag">+$3.500</span></label>
-        <label class="checkbox-item"><input type="checkbox" id="add_cubiertos" value="1000" onchange="actualizarTotal()"> 🍴 Agregar Cubiertos <span class="price-tag">+$1.000</span></label>
+    <div id="cart_display"></div>
+    
+    <div class="step">
+        <label><input type="checkbox" id="cubiertos" onchange="renderCart()"> 🥢 Agregar Cubiertos Bamboo (+$1.000)</label>
     </div>
 
-    <label>Alergias o notas especiales 🚫:</label>
-    <input type="text" id="notas" placeholder="Ej: Sin cebolla, alérgico a...">
-
-    <div style="background: #fff3cd; padding: 10px; border-radius: 10px; margin-top: 15px;">
-        <label class="checkbox-item" style="font-size: 0.85em;">
-            <input type="checkbox" id="acepta_ruta"> He leído que el despacho entra en hoja de ruta (12:45 a 14:00).
-        </label>
-    </div>
-
-    <div class="total-banner">Total: $<span id="total">0</span></div>
-
-    <button class="btn-whatsapp" onclick="enviar()">ENVIAR A COCINA 👨‍🍳</button>
+    <div class="total-box" id="total_final">TOTAL: $0</div>
+    <button class="btn-send" onclick="sendOrder()">ENVIAR PEDIDO COMPLETO 📲</button>
 </div>
 
 <script>
-    function actualizarTotal() {
-        let total = 0;
-        const combo = document.querySelector('input[name="main_combo"]:checked');
-        
-        if (combo) {
-            document.getElementById('seleccion_platos').classList.remove('hidden');
-            if (combo.value === 'ComboA') {
-                total += 6500;
-                document.getElementById('seccion_entrante').classList.add('hidden');
-            } else {
-                total += 7500;
-                document.getElementById('seccion_entrante').classList.remove('hidden');
-            }
-        }
+    let cart = [];
 
-        if(document.getElementById('add_frio').checked) total += 3500;
-        if(document.getElementById('add_dulce').checked) total += 3500;
-        if(document.getElementById('add_cubiertos').checked) total += 1000;
+    function addToCart() {
+        const combo = document.querySelector('input[name="combo"]:checked');
+        if(!combo) return alert("Selecciona un combo");
         
-        total += parseInt(document.getElementById('entrega').value);
-        document.getElementById('total').innerText = total.toLocaleString('es-CL');
+        const proteins = Array.from(document.querySelectorAll('.prot:checked')).map(p => p.value);
+        
+        const item = {
+            name: combo.dataset.name,
+            price: parseInt(combo.value),
+            detail: document.getElementById('detalle_plato').value,
+            prots: proteins.join("-")
+        };
+        
+        cart.push(item);
+        renderCart();
+        // Reset solo selección de plato
+        document.querySelectorAll('.prot').forEach(p => p.checked = false);
     }
 
-    function toggleEnsalada() {
-        const principal = document.getElementById('principal_tipo').value;
-        const seccionProt = document.getElementById('seccion_proteinas');
-        principal.includes("Ensalada") ? seccionProt.classList.remove('hidden') : seccionProt.classList.add('hidden');
+    function renderCart() {
+        const container = document.getElementById('cart_display');
+        container.innerHTML = "<h3>Resumen de Pedido:</h3>";
+        let subtotal = 0;
+        
+        cart.forEach((item, index) => {
+            subtotal += item.price;
+            container.innerHTML += `
+                <div class="cart-item">
+                    <b>${item.name}</b> ($${item.price}) <br>
+                    <small>${item.detail} ${item.prots ? '['+item.prots+']' : ''}</small>
+                    <button onclick="cart.splice(${index},1);renderCart()" style="float:right; border:none; background:none; color:red;">❌</button>
+                </div>`;
+        });
+
+        const zona = parseInt(document.getElementById('zona').value);
+        const cubiertos = document.getElementById('cubiertos').checked ? 1000 : 0;
+        const total = subtotal + zona + cubiertos;
+        
+        document.getElementById('total_final').innerText = "TOTAL: $" + total.toLocaleString('es-CL');
+        return { total, subtotal, zona, cubiertos };
     }
 
-    function enviar() {
+    function sendOrder() {
         const nombre = document.getElementById('nombre').value;
-        const combo = document.querySelector('input[name="main_combo"]:checked');
-        const acepta = document.getElementById('acepta_ruta').checked;
+        const direccion = document.getElementById('direccion').value;
+        if(cart.length === 0 || !nombre) return alert("Agrega al menos un menú y tu nombre");
 
-        if(!nombre || !combo || !acepta) {
-            alert("Por favor: Nombre, elegir Menú y aceptar condición de entrega.");
-            return;
-        }
+        let msg = `*NUEVA COMANDA - EL GOURMET PATAGON*%0A`;
+        msg += `👤 *Cliente:* ${nombre}%0A`;
+        msg += `📍 *Lugar:* ${direccion}%0A%0A`;
+        
+        cart.forEach((item, i) => {
+            msg += `🍴 *Menú ${i+1}:* ${item.name}%0A   _${item.detail}_%0A`;
+            if(item.prots) msg += `   _Proteínas: ${item.prots}_%0A`;
+        });
 
-        const proteinas = Array.from(document.querySelectorAll('.prot:checked')).map(p => p.value).join(", ");
-        
-        let msg = `*NUEVO PEDIDO EL GOURMET PATAGON* 🌿\n`;
-        msg += `👤 *Cliente:* ${nombre}\n`;
-        msg += `📍 *Entrega:* ${document.getElementById('direccion').value}\n`;
-        msg += `--------------------------\n`;
-        msg += `🍱 *Combo:* ${combo.value}\n`;
-        if(combo.value === 'ComboB') msg += `🥣 *Entrante:* ${document.getElementById('entrante_tipo').value}\n`;
-        msg += `🍽️ *Principal:* ${document.getElementById('principal_tipo').value}\n`;
-        if(proteinas) msg += `💪 *Proteínas:* ${proteinas}\n`;
-        
-        if(document.getElementById('add_frio').checked) msg += `🧊 Incluye Pa'l Frío\n`;
-        if(document.getElementById('add_dulce').checked) msg += `🧇 Incluye Waffle\n`;
-        if(document.getElementById('add_cubiertos').checked) msg += `🍴 *Con Cubiertos*\n`;
-        
-        if(document.getElementById('notas').value) msg += `🚫 *Notas:* ${document.getElementById('notas').value}\n`;
-        
-        msg += `--------------------------\n`;
-        msg += `🚚 *Ruta:* Aceptada\n`;
-        msg += `💰 *TOTAL:* $${document.getElementById('total').innerText}`;
+        const r = renderCart();
+        if(r.cubiertos > 0) msg += `%0A🥢 *Incluye Cubiertos Bamboo*%0A`;
+        msg += `%0A🚚 *Envío:* $${r.zona}%0A`;
+        msg += `💰 *TOTAL A PAGAR: $${r.total}*%0A%0A`;
+        msg += `🕒 *Hoja de ruta:* Aceptada`;
 
-        // Reemplaza con tu número:
-        const fono = "56994004188"; 
-        window.open(`https://wa.me/${fono}?text=${encodeURIComponent(msg)}`, '_blank');
+        window.open(`https://wa.me/56994004188?text=${msg}`);
     }
 </script>
-
 </body>
 </html>
