@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gourmet Patagon - Pedido y Pago</title>
+    <title>Gourmet Patagon - Pedidos</title>
     <style>
         :root { --primary: #e67e22; --dark: #2c3e50; --success: #25d366; --bg: #fdfaf6; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); padding: 10px; margin: 0; }
-        .container { max-width: 480px; margin: auto; background: white; padding: 15px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .container { max-width: 480px; margin: auto; background: white; padding: 20px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
         .step-title { font-size: 0.9rem; color: var(--primary); text-transform: uppercase; font-weight: 800; margin: 15px 0 10px; border-bottom: 1px solid #eee; }
         
@@ -19,14 +19,18 @@
         .selector-box { background: #f9f9f9; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: none; border-left: 5px solid var(--primary); }
         select, input { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 1rem; box-sizing: border-box; }
         
+        /* Proteínas con checkbox adelante */
+        .prot-item { display: flex; align-items: center; gap: 10px; margin: 8px 0; font-size: 0.9rem; background: white; padding: 8px; border-radius: 8px; }
+        .prot-item input { width: auto; margin: 0; }
+
         .bank-data { background: #eef2f7; padding: 15px; border-radius: 12px; font-size: 0.85rem; margin-top: 10px; border: 1px dashed var(--dark); display: none; }
         .cash-data { display: none; margin-top: 10px; }
         
-        .cart-item { background: #eee; padding: 10px; border-radius: 8px; margin: 5px 0; font-size: 0.85rem; }
+        .cart-item { background: #f0f0f0; padding: 10px; border-radius: 8px; margin: 5px 0; font-size: 0.85rem; border-left: 4px solid var(--primary); }
         .total-banner { background: var(--dark); color: white; padding: 15px; border-radius: 15px; text-align: center; font-weight: bold; font-size: 1.2rem; margin: 15px 0; }
         
-        button { width: 100%; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .btn-add { background: var(--primary); color: white; padding: 12px; margin-top: 5px; }
+        button { width: 100%; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; }
+        .btn-add { background: var(--primary); color: white; padding: 15px; margin-top: 10px; font-size: 1rem; }
         .btn-send { background: var(--success); color: white; padding: 18px; font-size: 1.1rem; margin-top: 10px; }
     </style>
 </head>
@@ -38,16 +42,19 @@
         <span>Cocina Taller - Coyhaique</span>
     </div>
 
-    <div class="step-title">1. Datos de Entrega 🚚</div>
+    <div class="step-title">1. Logística 🚚</div>
     <input type="text" id="nombre" placeholder="Nombre completo">
     <input type="text" id="direccion" placeholder="Dirección de despacho">
     <select id="zona" onchange="render()">
         <option value="0">Retiro / Centro hasta Victoria ($0)</option>
         <option value="1500">Sobre Victoria (+$1.500)</option>
     </select>
+    <div style="font-size: 0.75rem; background: #fff3cd; padding: 8px; border-radius: 8px;">
+        <input type="checkbox" id="cond" checked style="width:auto"> Acepto despacho entre <b>12:45 y 13:30</b> ✅
+    </div>
 
     <div class="step-title">2. Arma tu Combo 🧩🥊</div>
-    <div class="grid-combos">
+    <div class="grid-combos" id="combo-container">
         <label class="combo-card"><input type="radio" name="combo" value="6500" data-name="Menú A" onclick="toggleUI('A')"><b>Menú A</b><span>$6.500</span></label>
         <label class="combo-card"><input type="radio" name="combo" value="7500" data-name="Menú B" onclick="toggleUI('B')"><b>Menú B</b><span>$7.500</span></label>
         <label class="combo-card"><input type="radio" name="combo" value="3500" data-name="Sopa/Crema" onclick="toggleUI('S')"><b>Sopa/Crema</b><span>$3.500</span></label>
@@ -63,96 +70,116 @@
     </div>
 
     <div id="ui-principal" class="selector-box">
-        <label><b>Principal:</b></label>
-        <select id="principal_val" onchange="document.getElementById('ui-prot').style.display=(this.value.includes('Ensalada')?'block':'none')">
+        <label><b>Principal:</b> (Incluye Focaccia)</label>
+        <select id="principal_val" onchange="toggleProt()">
             <option value="Plato del Día">🥘 Plato del Día</option>
             <option value="La Gran Ensalada">🥗 La Gran Ensalada</option>
         </select>
-        <div id="ui-prot" style="display:none; font-size:0.8rem; margin-top:5px;">
-            <b>2 Proteínas:</b><br>
-            <input type="checkbox" class="p-check" value="Suprema"> Suprema | <input type="checkbox" class="p-check" value="Huevo"> Huevo | <input type="checkbox" class="p-check" value="Quinoa"> Quinoa | <input type="checkbox" class="p-check" value="Legumbres"> Legumbres
+        
+        <div id="ui-prot" style="display:none; margin-top:10px;">
+            <b>Seleccione 2 Proteínas:</b>
+            <div class="prot-item"><input type="checkbox" class="p-check" value="Quinoa"> Quinoa Tricolor</div>
+            <div class="prot-item"><input type="checkbox" class="p-check" value="Huevo"> Huevo Sancochado</div>
+            <div class="prot-item"><input type="checkbox" class="p-check" value="Lentejas"> Duo de Lentejas</div>
+            <div class="prot-item"><input type="checkbox" class="p-check" value="Ave"> Suprema de Ave</div>
         </div>
     </div>
 
     <button class="btn-add" onclick="addItem()">➕ AÑADIR AL PEDIDO</button>
-    <div id="resumen_cart" style="margin-top:10px;"></div>
+    
+    <div id="resumen_cart" style="margin-top:15px;"></div>
 
-    <div class="step-title">3. Forma de Pago 💰</div>
+    <div class="step-title">3. Pago 💰</div>
     <select id="pago" onchange="togglePago()">
-        <option value="">Selecciona cómo pagas...</option>
-        <option value="Transferencia">Transferencia Bancaria</option>
+        <option value="">Método de pago...</option>
+        <option value="Transferencia">Transferencia</option>
         <option value="Efectivo">Efectivo</option>
-        <option value="Tarjeta" disabled>Tarjeta Débito (Próximamente)</option>
     </select>
 
-    <div id="info-transferencia" class="bank-data">
-        <b>DATOS DE TRANSFERENCIA:</b><br>
-        Titular: ALEX ANDRE BERRIOS<br>
-        RUT: 15.841.237-3<br>
-        Banco: BCI<br>
-        Cuenta Corriente: 30763118<br>
-        <i>Enviar comprobante por este medio.</i>
+    <div id="info-tr" class="bank-data">
+        <b>BCI - Cuenta Corriente: 30763118</b><br>
+        ALEX ANDRE BERRIOS | 15.841.237-3
     </div>
-
-    <div id="info-efectivo" class="cash-data">
-        <input type="text" id="vuelto" placeholder="¿Con cuánto pagas? (Para el vuelto)">
+    <div id="info-ef" class="cash-data">
+        <input type="text" id="vuelto" placeholder="¿Con cuánto pagas?">
     </div>
-
-    <label style="display:block; margin:15px 0; font-size:0.85rem;">
-        <input type="checkbox" id="cubiertos" onchange="render()"> 🎋 Cubiertos Bamboo (+$1.000)
-    </label>
 
     <div class="total-banner" id="total_final">TOTAL: $0</div>
-    <button class="btn-send" onclick="send()">ENVIAR A WHATSAPP ✅</button>
+    <button class="btn-send" onclick="send()">ENVIAR PEDIDO COMPLETO 📲</button>
 </div>
 
 <script>
     let cart = [];
+
     function toggleUI(t){
         document.getElementById('ui-entrante').style.display=(t==='B')?'block':'none';
         document.getElementById('ui-principal').style.display=(t==='A'||t==='B')?'block':'none';
     }
+
+    function toggleProt(){
+        const v = document.getElementById('principal_val').value;
+        document.getElementById('ui-prot').style.display=(v==='La Gran Ensalada')?'block':'none';
+    }
+
     function togglePago(){
         const v = document.getElementById('pago').value;
-        document.getElementById('info-transferencia').style.display=(v==='Transferencia')?'block':'none';
-        document.getElementById('info-efectivo').style.display=(v==='Efectivo')?'block':'none';
+        document.getElementById('info-tr').style.display=(v==='Transferencia')?'block':'none';
+        document.getElementById('info-ef').style.display=(v==='Efectivo')?'block':'none';
     }
+
     function addItem(){
         const c = document.querySelector('input[name="combo"]:checked');
         if(!c) return alert("Selecciona un combo");
+        
         const prots = Array.from(document.querySelectorAll('.p-check:checked')).map(p => p.value);
+        if(document.getElementById('ui-prot').style.display === 'block' && prots.length !== 2) {
+            return alert("Selecciona exactamente 2 proteínas.");
+        }
+
         cart.push({
             name: c.dataset.name, price: parseInt(c.value),
             ent: (c.dataset.name==='Menú B')?document.getElementById('entrante_val').value:'',
             pri: (c.dataset.name.includes('Menú'))?document.getElementById('principal_val').value:'',
             pts: prots.join("/")
         });
+
+        // --- RESET DE OPCIONES PARA EL SIGUIENTE MENÚ ---
+        c.checked = false;
+        document.getElementById('ui-entrante').style.display = 'none';
+        document.getElementById('ui-principal').style.display = 'none';
+        document.getElementById('ui-prot').style.display = 'none';
+        document.querySelectorAll('.p-check').forEach(p => p.checked = false);
+        document.getElementById('principal_val').value = "Plato del Día";
+        
         render();
     }
+
     function render(){
         const res = document.getElementById('resumen_cart');
         res.innerHTML = "";
         let sub = 0;
         cart.forEach((it, i) => {
             sub += it.price;
-            res.innerHTML += `<div class="cart-item">${it.name} ${it.ent} ${it.pri} [${it.pts}] <span onclick="cart.splice(${i},1);render()" style="float:right;color:red">✖</span></div>`;
+            res.innerHTML += `<div class="cart-item">
+                <b>${it.name}</b> ${it.ent} ${it.pri} [${it.pts}]
+                <span onclick="cart.splice(${i},1);render()" style="float:right;color:red;cursor:pointer">✖</span>
+            </div>`;
         });
         const z = parseInt(document.getElementById('zona').value);
-        const cb = document.getElementById('cubiertos').checked ? 1000 : 0;
-        document.getElementById('total_final').innerText = "TOTAL: $" + (sub + z + cb).toLocaleString('es-CL');
+        document.getElementById('total_final').innerText = "TOTAL: $" + (sub + z).toLocaleString('es-CL');
     }
+
     function send(){
         const n = document.getElementById('nombre').value;
         const p = document.getElementById('pago').value;
-        if(!n || cart.length === 0 || !p) return alert("Faltan datos, productos o método de pago.");
+        if(!n || cart.length === 0 || !p) return alert("Completa nombre, pedido y pago.");
         
-        let msg = `*COMANDA - EL GOURMET PATAGON*%0A👤 *Cliente:* ${n}%0A📍 *Dirección:* ${document.getElementById('direccion').value}%0A%0A`;
-        cart.forEach((it, i) => { msg += `🍴 *Item ${i+1}:* ${it.name} (${it.ent} ${it.pri} ${it.pts})%0A`; });
+        let msg = `*COMANDA - EL GOURMET PATAGON*%0A👤 *Cliente:* ${n}%0A📍 *Dir:* ${document.getElementById('direccion').value}%0A%0A`;
+        cart.forEach((it, i) => { msg += `🍴 *${it.name}:* ${it.ent} ${it.pri} ${it.pts}%0A`; });
         
-        msg += `%0A💳 *Pago:* ${p}`;
-        if(p==='Efectivo') msg += ` (Paga con: ${document.getElementById('vuelto').value})`;
+        msg += `%0A💳 *Pago:* ${p} ${p==='Efectivo'?'(Paga con: '+document.getElementById('vuelto').value+')':''}`;
         msg += `%0A💰 *${document.getElementById('total_final').innerText}*`;
-        msg += `%0A🕒 *Despacho:* 12:45-13:30 (Aceptado)`;
+        msg += `%0A🕒 *Ruta:* 12:45-13:30 (Aceptada)`;
 
         window.open(`https://wa.me/56994004188?text=${msg}`);
     }
