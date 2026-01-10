@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gourmet Patagon - Gestión de Pedidos</title>
     <style>
-        :root { --primary: #e67e22; --dark: #2c3e50; --success: #25d366; --bg: #fdfaf6; --danger: #e74c3c; }
+        :root { --primary: #e67e22; --dark: #2c3e50; --success: #25d366; --bg: #fdfaf6; --danger: #e74c3c; --gift: #9b59b6; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); padding: 10px; margin: 0; }
         .container { max-width: 480px; margin: auto; background: white; padding: 20px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
@@ -13,8 +13,7 @@
         
         .logistica-box { background: #fff5eb; padding: 15px; border-radius: 15px; border: 1px solid var(--primary); margin-bottom: 15px; }
         .condicion-container { display: flex; align-items: flex-start; gap: 10px; background: #fee2e2; padding: 12px; border-radius: 10px; margin-top: 10px; border: 1px solid var(--danger); }
-        .condicion-container input { width: 25px; height: 25px; cursor: pointer; }
-
+        
         .grid-combos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .combo-card { border: 2px solid #f0f0f0; padding: 12px; border-radius: 15px; text-align: center; cursor: pointer; position: relative; }
         .combo-card input { position: absolute; opacity: 0; }
@@ -23,7 +22,8 @@
         .selector-box { background: #f9f9f9; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: none; border-left: 5px solid var(--primary); }
         select, input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 1rem; box-sizing: border-box; }
         
-        .vuelto-box { background: #dcfce7; color: #166534; padding: 10px; border-radius: 10px; font-weight: bold; margin-top: 5px; display: none; text-align: center; }
+        .vuelto-box { background: #dcfce7; color: #166534; padding: 15px; border-radius: 10px; font-weight: 800; margin-top: 5px; display: none; text-align: center; border: 2px solid #166534; }
+        .beneficio-tag { background: var(--gift); color: white; padding: 5px 10px; border-radius: 20px; font-size: 0.75rem; display: none; font-weight: bold; margin-top: 5px; text-align: center; }
 
         .cart-item { background: #f0f0f0; padding: 10px; border-radius: 8px; margin: 5px 0; font-size: 0.85rem; border-left: 4px solid var(--primary); }
         .total-banner { background: var(--dark); color: white; padding: 15px; border-radius: 15px; text-align: center; font-weight: bold; font-size: 1.2rem; margin: 15px 0; }
@@ -41,21 +41,29 @@
         <span>Cocina Taller - Coyhaique</span>
     </div>
 
-    <div class="step-title">1. Datos y Logística 🚚</div>
+    <div class="step-title">1. Datos y Modalidad 🚚</div>
     <div class="logistica-box">
         <input type="text" id="nombre" placeholder="Nombre y Apellido">
-        <input type="text" id="telefono" placeholder="Número de Contacto (Ej: +569...)">
-        <input type="text" id="direccion" placeholder="Dirección de entrega">
+        <input type="text" id="telefono" placeholder="Número de Contacto">
+        <input type="text" id="direccion" placeholder="Dirección (o escribe 'RETIRO')">
+        
+        <select id="modalidad" onchange="render()">
+            <option value="reparto">Servicio de Reparto (12:45 - 13:30)</option>
+            <option value="retiro">Retiro en Cocina Taller (Incentivo -$500)</option>
+        </select>
+
         <select id="zona" onchange="render()">
             <option value="0">Retiro / Centro hasta Victoria ($0)</option>
             <option value="1500">Sobre Victoria (+$1.500)</option>
         </select>
         
+        <div id="tag-incentivo" class="beneficio-tag">🎁 BENEFICIO APLICADO POR RETIRO</div>
+
         <div class="condicion-container">
-            <input type="checkbox" id="acepta_horario">
+            <input type="checkbox" id="acepta_horario" style="width:25px; height:25px;">
             <div style="font-size: 0.85rem; font-weight: bold; color: #991b1b;">
-                ACEPTO REPARTO EN HOJA DE RUTA:<br>
-                🕒 Entrega entre 12:45 y 13:30 hrs.
+                CONFIRMO MI PEDIDO:<br>
+                🕒 Entrega o Retiro según horario acordado.
             </div>
         </div>
     </div>
@@ -84,10 +92,10 @@
         </select>
         <div id="ui-prot" style="display:none; margin-top:10px;">
             <b>Seleccione 2 Proteínas:</b><br>
-            <input type="checkbox" class="p-check" value="Quinoa"> Quinoa Tricolor | 
-            <input type="checkbox" class="p-check" value="Huevo"> Huevo Sancochado | 
-            <input type="checkbox" class="p-check" value="Lentejas"> Duo de Lentejas | 
-            <input type="checkbox" class="p-check" value="Ave"> Suprema de Ave
+            <input type="checkbox" class="p-check" value="Quinoa"> Quinoa | 
+            <input type="checkbox" class="p-check" value="Huevo"> Huevo | 
+            <input type="checkbox" class="p-check" value="Lentejas"> Lentejas | 
+            <input type="checkbox" class="p-check" value="Ave"> Suprema
         </div>
     </div>
 
@@ -103,18 +111,17 @@
         <option value="">Método de pago...</option>
         <option value="Transferencia">Transferencia</option>
         <option value="Efectivo">Efectivo</option>
-        <option value="Tarjeta" disabled>Tarjeta Débito (Pronto)</option>
     </select>
 
-    <div id="info-tr" style="display:none; font-size:0.8rem; background:#eef2f7; padding:10px; border-radius:10px; margin:5px 0;">
+    <div id="info-tr" style="display:none; font-size:0.8rem; background:#eef2f7; padding:10px; border-radius:10px;">
         BCI Cta Corriente: 30763118 | Alex Berrios | 15.841.237-3
     </div>
     <div id="info-ef" style="display:none;">
-        <input type="number" id="paga_con" placeholder="¿Con cuánto dinero pagas?" oninput="calcVuelto()">
+        <input type="number" id="paga_con" placeholder="¿Con cuánto dinero pagas?" onkeyup="calcVuelto()">
         <div id="vuelto_resultado" class="vuelto-box"></div>
     </div>
 
-    <textarea id="observaciones" rows="2" placeholder="Observaciones de entrega..."></textarea>
+    <textarea id="observaciones" rows="2" placeholder="Notas adicionales..."></textarea>
 
     <div class="total-banner" id="total_final">TOTAL: $0</div>
     <button class="btn-send" onclick="send()">ENVIAR A WHATSAPP ✅</button>
@@ -159,34 +166,41 @@
             sub += it.price;
             res.innerHTML += `<div class="cart-item">${it.name} ${it.ent} ${it.pri} [${it.pts}] <span onclick="cart.splice(${i},1);render()" style="float:right;color:red;cursor:pointer">✖</span></div>`;
         });
+        
         const z = parseInt(document.getElementById('zona').value);
         const b = document.getElementById('bamboo').checked ? 1000 : 0;
-        totalGlobal = sub + z + b;
+        const mod = document.getElementById('modalidad').value;
+        const desc = (mod === 'retiro') ? -500 : 0;
+        
+        document.getElementById('tag-incentivo').style.display = (mod === 'retiro') ? 'block' : 'none';
+        document.getElementById('zona').disabled = (mod === 'retiro');
+
+        totalGlobal = sub + (mod === 'reparto' ? z : 0) + b + desc;
         document.getElementById('total_final').innerText = "TOTAL: $" + totalGlobal.toLocaleString('es-CL');
         calcVuelto();
     }
     function calcVuelto(){
         const pagaCon = parseInt(document.getElementById('paga_con').value);
         const cajaVuelto = document.getElementById('vuelto_resultado');
-        if(pagaCon >= totalGlobal && document.getElementById('pago').value === 'Efectivo'){
+        if(!isNaN(pagaCon) && pagaCon >= totalGlobal && document.getElementById('pago').value === 'Efectivo'){
             cajaVuelto.style.display = 'block';
             cajaVuelto.innerText = "SU VUELTO: $" + (pagaCon - totalGlobal).toLocaleString('es-CL');
         } else { cajaVuelto.style.display = 'none'; }
     }
     function send(){
-        if(!document.getElementById('acepta_horario').checked) return alert("Debes aceptar el horario.");
+        if(!document.getElementById('acepta_horario').checked) return alert("Confirma tu pedido.");
         const n = document.getElementById('nombre').value;
         const p = document.getElementById('pago').value;
+        const mod = document.getElementById('modalidad').value;
         if(!n || cart.length === 0 || !p) return alert("Faltan datos.");
         
-        let msg = `*COMANDA - EL GOURMET PATAGON*%0A👤 *Cliente:* ${n}%0A📞 *Tel:* ${document.getElementById('telefono').value}%0A📍 *Dir:* ${document.getElementById('direccion').value}%0A%0A`;
-        cart.forEach((it, i) => { msg += `🍴 *${it.name}:* ${it.ent} ${it.pri} ${it.pts}%0A`; });
-        if(document.getElementById('bamboo').checked) msg += `🎋 *Incluye Cubiertos Bamboo*%0A`;
-        msg += `%0A💳 *Pago:* ${p} ${p==='Efectivo'?'(Paga con: $'+document.getElementById('paga_con').value+', Vuelto: $'+(document.getElementById('paga_con').value - totalGlobal)+')':''}`;
-        if(document.getElementById('observaciones').value) msg += `%0A📝 *Obs:* ${document.getElementById('observaciones').value}`;
-        msg += `%0A💰 *TOTAL: $${totalGlobal}*%0A🕒 *Horario:* 12:45-13:30 (Aceptado)`;
+        let msg = `*COMANDA - EL GOURMET PATAGON*%0A👤 *Cliente:* ${n}%0A📞 *Tel:* ${document.getElementById('telefono').value}%0A📍 *MODALIDAD:* ${mod.toUpperCase()}%0A📍 *Dir:* ${document.getElementById('direccion').value}%0A%0A`;
+        cart.forEach((it) => { msg += `🍴 *${it.name}:* ${it.ent} ${it.pri} ${it.pts}%0A`; });
+        if(mod==='retiro') msg += `🎁 *Beneficio Retiro Aplicado (-$500)*%0A`;
+        msg += `%0A💳 *Pago:* ${p} ${p==='Efectivo'?'(Vuelto: $'+(document.getElementById('paga_con').value - totalGlobal)+')':''}`;
+        msg += `%0A💰 *TOTAL: $${totalGlobal.toLocaleString('es-CL')}*`;
         window.open(`https://wa.me/56994004188?text=${msg}`);
     }
 </script>
 </body>
-    </html>
+</html>
