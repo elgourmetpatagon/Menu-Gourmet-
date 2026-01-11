@@ -31,6 +31,8 @@
         button { width: 100%; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; }
         .btn-add { background: var(--primary); color: white; padding: 15px; margin-top: 10px; }
         .btn-send { background: var(--success); color: white; padding: 20px; font-size: 1.2rem; margin-top: 10px; }
+        
+        .btn-copy { background: #34495e; color: white; padding: 8px; font-size: 0.8rem; border-radius: 8px; margin-top: 10px; width: auto; display: inline-block; padding: 5px 15px; }
     </style>
 </head>
 <body>
@@ -102,8 +104,9 @@
     <button class="btn-add" onclick="addItem()">➕ AÑADIR AL PEDIDO</button>
     <div id="resumen_cart" style="margin-top:15px;"></div>
 
-    <div style="margin: 15px 0;">
-        <input type="checkbox" id="bamboo" onchange="render()" style="width: auto;"> 🎋 <b>Cubiertos de Bamboo (+$1.000)</b>
+    <div style="margin: 15px 0; background: #f0f7ff; padding: 10px; border-radius: 10px; border: 1px dashed #3498db;">
+        <input type="checkbox" id="bamboo" onchange="render()" style="width: auto;"> 🎋 <b>Cubiertos de Bamboo (+$1.000)</b><br>
+        <input type="checkbox" id="jugo" onchange="render()" style="width: auto; margin-top:10px;"> 🍋 <b>Jugo Natural de Limón (+$1.000)</b>
     </div>
 
     <div class="step-title">3. Pago y Notas 💰</div>
@@ -114,9 +117,15 @@
         <option value="Tarjeta" disabled>Tarjeta de Débito (Próximamente)</option>
     </select>
 
-    <div id="info-tr" style="display:none; font-size:0.8rem; background:#eef2f7; padding:10px; border-radius:10px;">
-        BCI Cta Corriente: 30763118 | Alex Berrios | 15.841.237-3
+    <div id="info-tr" style="display:none; font-size:0.8rem; background:#eef2f7; padding:15px; border-radius:10px; position:relative;">
+        <b>DATOS PARA TRANSFERIR:</b><br>
+        BCI Cta Corriente: 30763118<br>
+        Alex Berrios | 15.841.237-3<br>
+        elgourmetpatagon@gmail.com<br>
+        <button class="btn-copy" onclick="copyData()">📋 COPIAR DATOS</button>
+        <span id="copy-confirm" style="display:none; color: var(--success); font-size: 0.7rem; margin-left: 10px;">¡Copiado!</span>
     </div>
+
     <div id="info-ef" style="display:none;">
         <input type="number" id="paga_con" placeholder="¿Con cuánto dinero pagas?" onkeyup="calcVuelto()">
         <div id="vuelto_resultado" class="vuelto-box"></div>
@@ -145,6 +154,14 @@
         document.getElementById('info-ef').style.display=(v==='Efectivo')?'block':'none';
         calcVuelto();
     }
+    function copyData() {
+        const text = "BCI Cta Corriente 30763118, Alex Berrios, 15.841.237-3, elgourmetpatagon@gmail.com";
+        navigator.clipboard.writeText(text).then(() => {
+            const confirm = document.getElementById('copy-confirm');
+            confirm.style.display = 'inline';
+            setTimeout(() => confirm.style.display = 'none', 2000);
+        });
+    }
     function addItem(){
         const c = document.querySelector('input[name="combo"]:checked');
         if(!c) return alert("Selecciona un combo");
@@ -170,13 +187,14 @@
         
         const z = parseInt(document.getElementById('zona').value);
         const b = document.getElementById('bamboo').checked ? 1000 : 0;
+        const j = document.getElementById('jugo').checked ? 1000 : 0;
         const mod = document.getElementById('modalidad').value;
         const desc = (mod === 'retiro') ? -500 : 0;
         
         document.getElementById('tag-incentivo').style.display = (mod === 'retiro') ? 'block' : 'none';
         document.getElementById('zona').disabled = (mod === 'retiro');
 
-        totalGlobal = sub + (mod === 'reparto' ? z : 0) + b + desc;
+        totalGlobal = sub + (mod === 'reparto' ? z : 0) + b + j + desc;
         document.getElementById('total_final').innerText = "TOTAL: $" + totalGlobal.toLocaleString('es-CL');
         calcVuelto();
     }
@@ -195,20 +213,22 @@
         const mod = document.getElementById('modalidad').value;
         if(!n || cart.length === 0 || !p) return alert("Faltan datos.");
         
-        // CONTADOR DE PLATOS
         let counts = {};
         cart.forEach(it => { counts[it.name] = (counts[it.name] || 0) + 1; });
-        let controlMsg = "📊 *CONTRA-COMANDA (Control):*%0A";
-        for(let item in counts) { controlMsg += `- ${item}: ${counts[item]} raciones%0A`; }
+        if(document.getElementById('jugo').checked) counts['Jugo Limón'] = 1;
+        if(document.getElementById('bamboo').checked) counts['Bamboo'] = 1;
 
-        let msg = `*COMANDA - EL GOURMET PATAGON*%0A👤 *Cliente:* ${n}%0A📞 *Tel:* ${document.getElementById('telefono').value}%0A📍 *MODALIDAD:* ${mod.toUpperCase()}%0A📍 *Dir:* ${document.getElementById('direccion').value}%0A%0A`;
+        let controlMsg = "📊 *CONTRA-COMANDA (Control):*%0A";
+        for(let item in counts) { controlMsg += `- ${item}: ${counts[item]}%0A`; }
+
+        let msg = `*COMANDA - EL GOURMET PATAGON*%0A👤 *Cliente:* ${n}%0A📍 *MODALIDAD:* ${mod.toUpperCase()}%0A📍 *Dir:* ${document.getElementById('direccion').value}%0A%0A`;
         cart.forEach((it) => { msg += `🍴 *${it.name}:* ${it.ent} ${it.pri} ${it.pts}%0A`; });
+        if(document.getElementById('jugo').checked) msg += `🥤 *Extra:* Jugo de Limón ($1.000)%0A`;
         if(mod==='retiro') msg += `🎁 *Beneficio Retiro Aplicado (-$500)*%0A`;
         msg += `%0A💳 *Pago:* ${p} ${p==='Efectivo'?'(Vuelto: $'+(document.getElementById('paga_con').value - totalGlobal)+')':''}`;
-        if(document.getElementById('observaciones').value) msg += `%0A📝 *Obs:* ${document.getElementById('observaciones').value}`;
-        msg += `%0A💰 *TOTAL: $${totalGlobal.toLocaleString('es-CL')}*%0A🕒 *Horario:* 12:45-13:30 (Aceptado)%0A%0A${controlMsg}`;
+        msg += `%0A💰 *TOTAL: $${totalGlobal.toLocaleString('es-CL')}*%0A%0A${controlMsg}`;
         window.open(`https://wa.me/56994004188?text=${msg}`);
     }
 </script>
 </body>
-    </html>
+</html>
