@@ -13,11 +13,12 @@
         
         .logistica-box { background: #fff5eb; padding: 15px; border-radius: 15px; border: 1px solid var(--primary); margin-bottom: 15px; }
         .condicion-container { display: flex; align-items: flex-start; gap: 10px; background: #fee2e2; padding: 12px; border-radius: 10px; margin-top: 10px; border: 1px solid var(--danger); }
-        
+        .alerta-retiro { background: #fee2e2; color: #b91c1c; padding: 10px; border-radius: 10px; font-size: 0.8rem; margin-top: 10px; border: 1px solid #f87171; font-weight: bold; display: none; }
+
         .grid-combos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .combo-card { border: 2px solid #f0f0f0; padding: 12px; border-radius: 15px; text-align: center; cursor: pointer; position: relative; min-height: 100px; display: flex; flex-direction: column; justify-content: center; }
+        .combo-card { border: 2px solid #f0f0f0; padding: 12px; border-radius: 15px; text-align: center; cursor: pointer; position: relative; min-height: 110px; display: flex; flex-direction: column; justify-content: center; }
         .combo-card small { display: block; font-size: 0.72rem; color: var(--primary); font-weight: bold; margin-top: 4px; line-height: 1.1; }
-        .combo-card .focaccia { color: #27ae60; font-size: 0.65rem; text-transform: uppercase; }
+        .focaccia-style { color: #27ae60 !important; font-size: 0.65rem !important; text-transform: uppercase; }
         .combo-card input { position: absolute; opacity: 0; }
         .combo-card:has(input:checked) { border-color: var(--primary); background: #fff5eb; }
 
@@ -27,7 +28,8 @@
         .vuelto-box { background: #dcfce7; color: #166534; padding: 15px; border-radius: 10px; font-weight: 800; margin-top: 5px; display: none; text-align: center; border: 2px solid #166534; }
         .beneficio-tag { background: var(--gift); color: white; padding: 5px 10px; border-radius: 20px; font-size: 0.75rem; display: none; font-weight: bold; margin-top: 5px; text-align: center; }
 
-        .cart-item { background: #f0f0f0; padding: 10px; border-radius: 8px; margin: 5px 0; font-size: 0.85rem; border-left: 4px solid var(--primary); }
+        .cart-item { background: #f8f9fa; padding: 10px; border-radius: 10px; margin: 5px 0; font-size: 0.85rem; border-left: 4px solid var(--primary); }
+        .cart-extra { background: #eef2f7; padding: 8px; border-radius: 8px; margin: 3px 0; font-size: 0.8rem; color: #34495e; font-style: italic; border-left: 4px solid #3498db; }
         .total-banner { background: var(--dark); color: white; padding: 15px; border-radius: 15px; text-align: center; font-weight: bold; font-size: 1.2rem; margin: 15px 0; }
         
         button { width: 100%; border: none; border-radius: 12px; cursor: pointer; font-weight: bold; }
@@ -36,7 +38,6 @@
         
         .btn-copy { background: #34495e; color: white; padding: 5px 15px; font-size: 0.8rem; border-radius: 8px; margin-top: 10px; width: auto; display: inline-block; }
         .check-row { display: flex; align-items: center; gap: 8px; margin: 8px 0; font-size: 0.95rem; cursor: pointer; }
-        .check-row input { width: 20px; height: 20px; margin: 0; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -50,7 +51,6 @@
     <div class="step-title">1. Datos y Modalidad 🚚</div>
     <div class="logistica-box">
         <input type="text" id="nombre" placeholder="Nombre y Apellido">
-        <input type="text" id="telefono" placeholder="Número de Contacto">
         <input type="text" id="direccion" placeholder="Dirección de entrega">
         
         <select id="modalidad" onchange="render()">
@@ -63,13 +63,13 @@
             <option value="1500">Sobre Victoria (+$1.500)</option>
         </select>
         
+        <div id="msg-retiro" class="alerta-retiro">⚠️ HORA LÍMITE DE RETIRO: 12:30 a 12:45 hrs.</div>
         <div id="tag-incentivo" class="beneficio-tag">🎁 BENEFICIO APLICADO POR RETIRO</div>
 
         <div class="condicion-container">
             <input type="checkbox" id="acepta_horario" style="width:25px; height:25px;">
             <div style="font-size: 0.85rem; font-weight: bold; color: #991b1b;">
-                CONFIRMO MI PEDIDO:<br>
-                🕒 Entrega o Retiro según horario acordado.
+                CONFIRMO MI PEDIDO Y HORARIOS.
             </div>
         </div>
     </div>
@@ -80,18 +80,19 @@
             <input type="radio" name="combo" value="6500" data-name="Menú A" onclick="toggleUI('A')">
             <b>Menú A</b><span>$6.500</span>
             <small>Principal</small>
-            <small class="focaccia">+ Focaccia de cortesía</small>
+            <small class="focaccia-style">+ Focaccia de cortesía</small>
         </label>
         <label class="combo-card">
             <input type="radio" name="combo" value="7500" data-name="Menú B" onclick="toggleUI('B')">
             <b>Menú B</b><span>$7.500</span>
             <small>Entrante + Principal</small>
-            <small class="focaccia">+ Focaccia de cortesía</small>
+            <small class="focaccia-style">+ Focaccia de cortesía</small>
         </label>
         <label class="combo-card">
             <input type="radio" name="combo" value="3500" data-name="Sopa/Crema" onclick="toggleUI('S')">
             <b>Sopa/Crema</b><span>$3.500</span>
-            <small>500cc + Focaccia</small>
+            <small>500cc</small>
+            <small class="focaccia-style">+ Focaccia de cortesía</small>
         </label>
         <label class="combo-card">
             <input type="radio" name="combo" value="3500" data-name="Dulce" onclick="toggleUI('D')">
@@ -124,7 +125,12 @@
     </div>
 
     <button class="btn-add" onclick="addItem()">➕ AÑADIR AL PEDIDO</button>
-    <div id="resumen_cart" style="margin-top:15px;"></div>
+    
+    <div id="resumen_visual" style="margin-top:20px;">
+        <div class="step-title">Resumen de tu Pedido 🛍️</div>
+        <div id="items_cart"></div>
+        <div id="extras_cart"></div>
+    </div>
 
     <div style="margin: 15px 0; background: #f0f7ff; padding: 10px; border-radius: 15px; border: 1px dashed #3498db;">
         <label class="check-row"><input type="checkbox" id="bamboo" onchange="render()"> 🎋 <b>Cubiertos de Bamboo (+$1.000)</b></label>
@@ -137,15 +143,11 @@
         <option value="">Método de pago...</option>
         <option value="Transferencia">Transferencia</option>
         <option value="Efectivo">Efectivo</option>
-        <option value="Tarjeta" disabled>Tarjeta de Débito (Próximamente)</option>
     </select>
 
     <div id="info-tr" style="display:none; font-size:0.8rem; background:#eef2f7; padding:15px; border-radius:10px;">
-        <b>DATOS PARA TRANSFERIR:</b><br>
-        BCI Cta Corriente: 30763118<br>
-        Alex Berrios | 15.841.237-3<br>
+        <b>BCI Cta Corriente: 30763118</b> | Alex Berrios | 15.841.237-3
         <button class="btn-copy" onclick="copyData()">📋 COPIAR DATOS</button>
-        <span id="copy-confirm" style="display:none; color: var(--success); font-size: 0.7rem; margin-left: 10px;">¡Copiado!</span>
     </div>
 
     <div id="info-ef" style="display:none;">
@@ -177,12 +179,8 @@
         calcVuelto();
     }
     function copyData() {
-        const text = "BCI Cta Corriente 30763118, Alex Berrios, 15.841.237-3, elgourmetpatagon@gmail.com";
-        navigator.clipboard.writeText(text).then(() => {
-            const confirm = document.getElementById('copy-confirm');
-            confirm.style.display = 'inline';
-            setTimeout(() => confirm.style.display = 'none', 2000);
-        });
+        const text = "BCI Cta Corriente 30763118, Alex Berrios, 15.841.237-3";
+        navigator.clipboard.writeText(text); alert("Copiado");
     }
     function addItem(){
         const c = document.querySelector('input[name="combo"]:checked');
@@ -196,29 +194,37 @@
             pri: (c.dataset.name.includes('Menú'))?document.getElementById('principal_val').value:'',
             pts: prots.join("/")
         });
-        c.checked = false;
         render();
     }
     function render(){
-        const res = document.getElementById('resumen_cart');
-        res.innerHTML = ""; let sub = 0;
+        const itemsDiv = document.getElementById('items_cart');
+        const extrasDiv = document.getElementById('extras_cart');
+        itemsDiv.innerHTML = ""; extrasDiv.innerHTML = "";
+        let sub = 0;
+
         cart.forEach((it, i) => {
             sub += it.price;
-            res.innerHTML += `<div class="cart-item">${it.name} ${it.ent} ${it.pri} [${it.pts}] <span onclick="cart.splice(${i},1);render()" style="float:right;color:red;cursor:pointer">✖</span></div>`;
+            itemsDiv.innerHTML += `<div class="cart-item">📦 ${it.name} ${it.ent} ${it.pri} [${it.pts}] <span onclick="cart.splice(${i},1);render()" style="float:right;color:red;cursor:pointer">✖</span></div>`;
         });
-        
-        const z = parseInt(document.getElementById('zona').value);
+
         const b = document.getElementById('bamboo').checked ? 1000 : 0;
         const j = document.getElementById('jugo').checked ? 1000 : 0;
         const ep = document.getElementById('extra_prot').checked ? 1000 : 0;
-        const mod = document.getElementById('modalidad').value;
-        const desc = (mod === 'retiro') ? -500 : 0;
         
+        if(b) extrasDiv.innerHTML += `<div class="cart-extra">🎋 Cubiertos de Bamboo (+$1.000)</div>`;
+        if(j) extrasDiv.innerHTML += `<div class="cart-extra">🍋 Dressing Cítrico (+$1.000)</div>`;
+        if(ep) extrasDiv.innerHTML += `<div class="cart-extra">🥩 Extra Proteína (+$1.000)</div>`;
+
+        const mod = document.getElementById('modalidad').value;
+        const z = (mod === 'reparto') ? parseInt(document.getElementById('zona').value) : 0;
+        const desc = (mod === 'retiro') ? -500 : 0;
+
+        document.getElementById('msg-retiro').style.display = (mod === 'retiro') ? 'block' : 'none';
         document.getElementById('tag-incentivo').style.display = (mod === 'retiro') ? 'block' : 'none';
         document.getElementById('zona').disabled = (mod === 'retiro');
 
-        totalGlobal = sub + (mod === 'reparto' ? z : 0) + b + j + ep + desc;
-        document.getElementById('total_final').innerText = "TOTAL: $" + totalGlobal.toLocaleString('es-CL');
+        totalGlobal = sub + z + b + j + ep + desc;
+        document.getElementById('total_final').innerText = "TOTAL A PAGAR: $" + totalGlobal.toLocaleString('es-CL');
         calcVuelto();
     }
     function calcVuelto(){
@@ -230,33 +236,18 @@
         } else { cajaVuelto.style.display = 'none'; }
     }
     function send(){
-        if(!document.getElementById('acepta_horario').checked) return alert("Confirma tu pedido.");
+        if(!document.getElementById('acepta_horario').checked) return alert("Confirma horarios.");
         const n = document.getElementById('nombre').value;
         const p = document.getElementById('pago').value;
-        const mod = document.getElementById('modalidad').value;
         if(!n || cart.length === 0 || !p) return alert("Faltan datos.");
         
-        let counts = {};
-        cart.forEach(it => { counts[it.name] = (counts[it.name] || 0) + 1; });
-        if(document.getElementById('jugo').checked) counts['Dressing Cítrico'] = 1;
-        if(document.getElementById('bamboo').checked) counts['Bamboo'] = 1;
-        if(document.getElementById('extra_prot').checked) counts['Prot. Extra'] = 1;
-
-        let controlMsg = "📊 *CONTRA-COMANDA (Control):*%0A";
-        for(let item in counts) { controlMsg += `- ${item}: ${counts[item]}%0A`; }
-
-        let msg = `*COMANDA - EL GOURMET PATAGON*%0A👤 *Cliente:* ${n}%0A📍 *MODALIDAD:* ${mod.toUpperCase()}%0A📍 *Dir:* ${document.getElementById('direccion').value}%0A%0A`;
-        cart.forEach((it) => { 
-            let extraFocaccia = it.name.includes('Menú') || it.name === 'Sopa/Crema' ? " (+ Focaccia)" : "";
-            msg += `🍴 *${it.name}:* ${it.ent} ${it.pri} [${it.pts}]${extraFocaccia}%0A`; 
-        });
-        if(document.getElementById('jugo').checked) msg += `🍋 *Extra:* Dressing Cítrico ($1.000)%0A`;
-        if(document.getElementById('extra_prot').checked) msg += `🥩 *Extra:* Proteína Extra ($1.000)%0A`;
-        if(document.getElementById('bamboo').checked) msg += `🎋 *Extra:* Cubiertos Bamboo ($1.000)%0A`;
-        if(mod==='retiro') msg += `🎁 *Beneficio Retiro Aplicado (-$500)*%0A`;
+        let msg = `*PEDIDO - EL GOURMET PATAGON*%0A👤 *Cliente:* ${n}%0A📍 *MODALIDAD:* ${document.getElementById('modalidad').value.toUpperCase()}%0A%0A`;
+        cart.forEach((it) => { msg += `🍴 *${it.name}:* ${it.ent} ${it.pri} [${it.pts}]%0A`; });
+        if(document.getElementById('jugo').checked) msg += `🍋 *Extra:* Dressing Cítrico%0A`;
+        if(document.getElementById('extra_prot').checked) msg += `🥩 *Extra:* Proteína Extra%0A`;
+        if(document.getElementById('bamboo').checked) msg += `🎋 *Extra:* Cubiertos Bamboo%0A`;
         
-        msg += `%0A💳 *Pago:* ${p} ${p==='Efectivo'?'(Vuelto: $'+(document.getElementById('paga_con').value - totalGlobal)+')':''}`;
-        msg += `%0A💰 *TOTAL: $${totalGlobal.toLocaleString('es-CL')}*%0A%0A${controlMsg}`;
+        msg += `%0A💰 *TOTAL: $${totalGlobal.toLocaleString('es-CL')}*%0A💳 *Pago:* ${p}`;
         window.open(`https://wa.me/56994004188?text=${msg}`);
     }
 </script>
