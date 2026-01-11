@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -45,7 +45,7 @@
     <div class="logistica-box">
         <input type="text" id="nombre" placeholder="Nombre y Apellido">
         <input type="text" id="telefono" placeholder="Número de Contacto">
-        <input type="text" id="direccion" placeholder="Dirección (o escribe 'RETIRO')">
+        <input type="text" id="direccion" placeholder="Dirección de entrega">
         
         <select id="modalidad" onchange="render()">
             <option value="reparto">Servicio de Reparto (12:45 - 13:30)</option>
@@ -53,7 +53,7 @@
         </select>
 
         <select id="zona" onchange="render()">
-            <option value="0">Retiro / Centro hasta Victoria ($0)</option>
+            <option value="0">Centro hasta Victoria (Gratis)</option>
             <option value="1500">Sobre Victoria (+$1.500)</option>
         </select>
         
@@ -111,6 +111,7 @@
         <option value="">Método de pago...</option>
         <option value="Transferencia">Transferencia</option>
         <option value="Efectivo">Efectivo</option>
+        <option value="Tarjeta" disabled>Tarjeta de Débito (Próximamente)</option>
     </select>
 
     <div id="info-tr" style="display:none; font-size:0.8rem; background:#eef2f7; padding:10px; border-radius:10px;">
@@ -194,13 +195,20 @@
         const mod = document.getElementById('modalidad').value;
         if(!n || cart.length === 0 || !p) return alert("Faltan datos.");
         
+        // CONTADOR DE PLATOS
+        let counts = {};
+        cart.forEach(it => { counts[it.name] = (counts[it.name] || 0) + 1; });
+        let controlMsg = "📊 *CONTRA-COMANDA (Control):*%0A";
+        for(let item in counts) { controlMsg += `- ${item}: ${counts[item]} raciones%0A`; }
+
         let msg = `*COMANDA - EL GOURMET PATAGON*%0A👤 *Cliente:* ${n}%0A📞 *Tel:* ${document.getElementById('telefono').value}%0A📍 *MODALIDAD:* ${mod.toUpperCase()}%0A📍 *Dir:* ${document.getElementById('direccion').value}%0A%0A`;
         cart.forEach((it) => { msg += `🍴 *${it.name}:* ${it.ent} ${it.pri} ${it.pts}%0A`; });
         if(mod==='retiro') msg += `🎁 *Beneficio Retiro Aplicado (-$500)*%0A`;
         msg += `%0A💳 *Pago:* ${p} ${p==='Efectivo'?'(Vuelto: $'+(document.getElementById('paga_con').value - totalGlobal)+')':''}`;
-        msg += `%0A💰 *TOTAL: $${totalGlobal.toLocaleString('es-CL')}*`;
+        if(document.getElementById('observaciones').value) msg += `%0A📝 *Obs:* ${document.getElementById('observaciones').value}`;
+        msg += `%0A💰 *TOTAL: $${totalGlobal.toLocaleString('es-CL')}*%0A🕒 *Horario:* 12:45-13:30 (Aceptado)%0A%0A${controlMsg}`;
         window.open(`https://wa.me/56994004188?text=${msg}`);
     }
 </script>
 </body>
-</html>
+    </html>
