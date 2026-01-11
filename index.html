@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+        <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -16,6 +16,7 @@
         
         .grid-combos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .combo-card { border: 2px solid #f0f0f0; padding: 12px; border-radius: 15px; text-align: center; cursor: pointer; position: relative; }
+        .combo-card small { display: block; font-size: 0.75rem; color: var(--primary); font-weight: bold; margin-top: 4px; }
         .combo-card input { position: absolute; opacity: 0; }
         .combo-card:has(input:checked) { border-color: var(--primary); background: #fff5eb; }
 
@@ -32,9 +33,9 @@
         .btn-add { background: var(--primary); color: white; padding: 15px; margin-top: 10px; }
         .btn-send { background: var(--success); color: white; padding: 20px; font-size: 1.2rem; margin-top: 10px; }
         
-        .btn-copy { background: #34495e; color: white; padding: 8px; font-size: 0.8rem; border-radius: 8px; margin-top: 10px; width: auto; display: inline-block; padding: 5px 15px; }
-        .prot-label { display: flex; align-items: center; gap: 8px; margin: 5px 0; font-size: 0.95rem; }
-        .prot-label input { width: 20px; height: 20px; margin: 0; }
+        .btn-copy { background: #34495e; color: white; padding: 5px 15px; font-size: 0.8rem; border-radius: 8px; margin-top: 10px; width: auto; display: inline-block; }
+        .check-row { display: flex; align-items: center; gap: 8px; margin: 8px 0; font-size: 0.95rem; cursor: pointer; }
+        .check-row input { width: 20px; height: 20px; margin: 0; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -74,8 +75,14 @@
 
     <div class="step-title">2. Arma tu Combo 🧩🥊</div>
     <div class="grid-combos">
-        <label class="combo-card"><input type="radio" name="combo" value="6500" data-name="Menú A" onclick="toggleUI('A')"><b>Menú A</b><span>$6.500</span></label>
-        <label class="combo-card"><input type="radio" name="combo" value="7500" data-name="Menú B" onclick="toggleUI('B')"><b>Menú B</b><span>$7.500</span></label>
+        <label class="combo-card">
+            <input type="radio" name="combo" value="6500" data-name="Menú A" onclick="toggleUI('A')">
+            <b>Menú A</b><span>$6.500</span><small>Principal</small>
+        </label>
+        <label class="combo-card">
+            <input type="radio" name="combo" value="7500" data-name="Menú B" onclick="toggleUI('B')">
+            <b>Menú B</b><span>$7.500</span><small>Entrante + Principal</small>
+        </label>
         <label class="combo-card"><input type="radio" name="combo" value="3500" data-name="Sopa/Crema" onclick="toggleUI('S')"><b>Sopa/Crema</b><span>$3.500</span></label>
         <label class="combo-card"><input type="radio" name="combo" value="3500" data-name="Dulce" onclick="toggleUI('D')"><b>Dulce</b><span>$3.500</span></label>
     </div>
@@ -96,23 +103,20 @@
         </select>
         <div id="ui-prot" style="display:none; margin-top:10px;">
             <b>Seleccione 2 Proteínas:</b><br>
-            <label class="prot-label"><input type="checkbox" class="p-check" value="Quinoa"> Quinoa</label>
-            <label class="prot-label"><input type="checkbox" class="p-check" value="Huevo"> Huevo</label>
-            <label class="prot-label"><input type="checkbox" class="p-check" value="Lentejas"> Lentejas</label>
-            <label class="prot-label"><input type="checkbox" class="p-check" value="Ave"> Suprema</label>
+            <label class="check-row"><input type="checkbox" class="p-check" value="Quinoa Tricolor"> 🥗 Quinoa Tricolor</label>
+            <label class="check-row"><input type="checkbox" class="p-check" value="Huevo Sancochado"> 🥚 Huevo Sancochado</label>
+            <label class="check-row"><input type="checkbox" class="p-check" value="Dúo de Lentejas"> 🥘 Dúo de Lentejas (N+R)</label>
+            <label class="check-row"><input type="checkbox" class="p-check" value="Suprema de Ave"> 🍗 Suprema de Ave</label>
         </div>
     </div>
 
     <button class="btn-add" onclick="addItem()">➕ AÑADIR AL PEDIDO</button>
     <div id="resumen_cart" style="margin-top:15px;"></div>
 
-    <div style="margin: 15px 0; background: #f0f7ff; padding: 10px; border-radius: 10px; border: 1px dashed #3498db;">
-        <label style="display: flex; align-items: center; gap: 8px;">
-            <input type="checkbox" id="bamboo" onchange="render()" style="width: 20px; height: 20px;"> 🎋 <b>Cubiertos de Bamboo (+$1.000)</b>
-        </label>
-        <label style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
-            <input type="checkbox" id="jugo" onchange="render()" style="width: 20px; height: 20px;"> 🍋 <b>Jugo Natural de Limón (+$1.000)</b>
-        </label>
+    <div style="margin: 15px 0; background: #f0f7ff; padding: 10px; border-radius: 15px; border: 1px dashed #3498db;">
+        <label class="check-row"><input type="checkbox" id="bamboo" onchange="render()"> 🎋 <b>Cubiertos de Bamboo (+$1.000)</b></label>
+        <label class="check-row"><input type="checkbox" id="jugo" onchange="render()"> 🍋 <b>Dressing Cítrico (+$1.000)</b></label>
+        <label class="check-row"><input type="checkbox" id="extra_prot" onchange="render()"> 🥩 <b>Extra Proteína Ensalada (+$1.000)</b></label>
     </div>
 
     <div class="step-title">3. Pago y Notas 💰</div>
@@ -127,7 +131,6 @@
         <b>DATOS PARA TRANSFERIR:</b><br>
         BCI Cta Corriente: 30763118<br>
         Alex Berrios | 15.841.237-3<br>
-        elgourmetpatagon@gmail.com<br>
         <button class="btn-copy" onclick="copyData()">📋 COPIAR DATOS</button>
         <span id="copy-confirm" style="display:none; color: var(--success); font-size: 0.7rem; margin-left: 10px;">¡Copiado!</span>
     </div>
@@ -194,13 +197,14 @@
         const z = parseInt(document.getElementById('zona').value);
         const b = document.getElementById('bamboo').checked ? 1000 : 0;
         const j = document.getElementById('jugo').checked ? 1000 : 0;
+        const ep = document.getElementById('extra_prot').checked ? 1000 : 0;
         const mod = document.getElementById('modalidad').value;
         const desc = (mod === 'retiro') ? -500 : 0;
         
         document.getElementById('tag-incentivo').style.display = (mod === 'retiro') ? 'block' : 'none';
         document.getElementById('zona').disabled = (mod === 'retiro');
 
-        totalGlobal = sub + (mod === 'reparto' ? z : 0) + b + j + desc;
+        totalGlobal = sub + (mod === 'reparto' ? z : 0) + b + j + ep + desc;
         document.getElementById('total_final').innerText = "TOTAL: $" + totalGlobal.toLocaleString('es-CL');
         calcVuelto();
     }
@@ -221,15 +225,17 @@
         
         let counts = {};
         cart.forEach(it => { counts[it.name] = (counts[it.name] || 0) + 1; });
-        if(document.getElementById('jugo').checked) counts['Jugo Limón'] = 1;
+        if(document.getElementById('jugo').checked) counts['Dressing Cítrico'] = 1;
         if(document.getElementById('bamboo').checked) counts['Bamboo'] = 1;
+        if(document.getElementById('extra_prot').checked) counts['Prot. Extra'] = 1;
 
         let controlMsg = "📊 *CONTRA-COMANDA (Control):*%0A";
         for(let item in counts) { controlMsg += `- ${item}: ${counts[item]}%0A`; }
 
         let msg = `*COMANDA - EL GOURMET PATAGON*%0A👤 *Cliente:* ${n}%0A📍 *MODALIDAD:* ${mod.toUpperCase()}%0A📍 *Dir:* ${document.getElementById('direccion').value}%0A%0A`;
-        cart.forEach((it) => { msg += `🍴 *${it.name}:* ${it.ent} ${it.pri} ${it.pts}%0A`; });
-        if(document.getElementById('jugo').checked) msg += `🥤 *Extra:* Jugo de Limón ($1.000)%0A`;
+        cart.forEach((it) => { msg += `🍴 *${it.name}:* ${it.ent} ${it.pri} [${it.pts}]%0A`; });
+        if(document.getElementById('jugo').checked) msg += `🍋 *Extra:* Dressing Cítrico ($1.000)%0A`;
+        if(document.getElementById('extra_prot').checked) msg += `🥩 *Extra:* Proteína Extra ($1.000)%0A`;
         if(document.getElementById('bamboo').checked) msg += `🎋 *Extra:* Cubiertos Bamboo ($1.000)%0A`;
         if(mod==='retiro') msg += `🎁 *Beneficio Retiro Aplicado (-$500)*%0A`;
         
@@ -239,4 +245,4 @@
     }
 </script>
 </body>
-                                          </html>
+                                         </html>
