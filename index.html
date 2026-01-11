@@ -1,4 +1,4 @@
-        <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -15,8 +15,9 @@
         .condicion-container { display: flex; align-items: flex-start; gap: 10px; background: #fee2e2; padding: 12px; border-radius: 10px; margin-top: 10px; border: 1px solid var(--danger); }
         
         .grid-combos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-        .combo-card { border: 2px solid #f0f0f0; padding: 12px; border-radius: 15px; text-align: center; cursor: pointer; position: relative; }
-        .combo-card small { display: block; font-size: 0.75rem; color: var(--primary); font-weight: bold; margin-top: 4px; }
+        .combo-card { border: 2px solid #f0f0f0; padding: 12px; border-radius: 15px; text-align: center; cursor: pointer; position: relative; min-height: 100px; display: flex; flex-direction: column; justify-content: center; }
+        .combo-card small { display: block; font-size: 0.72rem; color: var(--primary); font-weight: bold; margin-top: 4px; line-height: 1.1; }
+        .combo-card .focaccia { color: #27ae60; font-size: 0.65rem; text-transform: uppercase; }
         .combo-card input { position: absolute; opacity: 0; }
         .combo-card:has(input:checked) { border-color: var(--primary); background: #fff5eb; }
 
@@ -77,14 +78,26 @@
     <div class="grid-combos">
         <label class="combo-card">
             <input type="radio" name="combo" value="6500" data-name="Menú A" onclick="toggleUI('A')">
-            <b>Menú A</b><span>$6.500</span><small>Principal</small>
+            <b>Menú A</b><span>$6.500</span>
+            <small>Principal</small>
+            <small class="focaccia">+ Focaccia de cortesía</small>
         </label>
         <label class="combo-card">
             <input type="radio" name="combo" value="7500" data-name="Menú B" onclick="toggleUI('B')">
-            <b>Menú B</b><span>$7.500</span><small>Entrante + Principal</small>
+            <b>Menú B</b><span>$7.500</span>
+            <small>Entrante + Principal</small>
+            <small class="focaccia">+ Focaccia de cortesía</small>
         </label>
-        <label class="combo-card"><input type="radio" name="combo" value="3500" data-name="Sopa/Crema" onclick="toggleUI('S')"><b>Sopa/Crema</b><span>$3.500</span></label>
-        <label class="combo-card"><input type="radio" name="combo" value="3500" data-name="Dulce" onclick="toggleUI('D')"><b>Dulce</b><span>$3.500</span></label>
+        <label class="combo-card">
+            <input type="radio" name="combo" value="3500" data-name="Sopa/Crema" onclick="toggleUI('S')">
+            <b>Sopa/Crema</b><span>$3.500</span>
+            <small>500cc + Focaccia</small>
+        </label>
+        <label class="combo-card">
+            <input type="radio" name="combo" value="3500" data-name="Dulce" onclick="toggleUI('D')">
+            <b>Dulce</b><span>$3.500</span>
+            <small>Delicia del Día</small>
+        </label>
     </div>
 
     <div id="ui-entrante" class="selector-box">
@@ -233,7 +246,10 @@
         for(let item in counts) { controlMsg += `- ${item}: ${counts[item]}%0A`; }
 
         let msg = `*COMANDA - EL GOURMET PATAGON*%0A👤 *Cliente:* ${n}%0A📍 *MODALIDAD:* ${mod.toUpperCase()}%0A📍 *Dir:* ${document.getElementById('direccion').value}%0A%0A`;
-        cart.forEach((it) => { msg += `🍴 *${it.name}:* ${it.ent} ${it.pri} [${it.pts}]%0A`; });
+        cart.forEach((it) => { 
+            let extraFocaccia = it.name.includes('Menú') || it.name === 'Sopa/Crema' ? " (+ Focaccia)" : "";
+            msg += `🍴 *${it.name}:* ${it.ent} ${it.pri} [${it.pts}]${extraFocaccia}%0A`; 
+        });
         if(document.getElementById('jugo').checked) msg += `🍋 *Extra:* Dressing Cítrico ($1.000)%0A`;
         if(document.getElementById('extra_prot').checked) msg += `🥩 *Extra:* Proteína Extra ($1.000)%0A`;
         if(document.getElementById('bamboo').checked) msg += `🎋 *Extra:* Cubiertos Bamboo ($1.000)%0A`;
@@ -245,4 +261,4 @@
     }
 </script>
 </body>
-                                         </html>
+</html>
