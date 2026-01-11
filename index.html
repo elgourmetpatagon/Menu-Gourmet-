@@ -33,6 +33,8 @@
         .btn-send { background: var(--success); color: white; padding: 20px; font-size: 1.2rem; margin-top: 10px; }
         
         .btn-copy { background: #34495e; color: white; padding: 8px; font-size: 0.8rem; border-radius: 8px; margin-top: 10px; width: auto; display: inline-block; padding: 5px 15px; }
+        .prot-label { display: flex; align-items: center; gap: 8px; margin: 5px 0; font-size: 0.95rem; }
+        .prot-label input { width: 20px; height: 20px; margin: 0; }
     </style>
 </head>
 <body>
@@ -81,7 +83,7 @@
     <div id="ui-entrante" class="selector-box">
         <label><b>Entrante:</b></label>
         <select id="entrante_val">
-            <option value="Sopa/Crema del día">🥣 Sopa o Crema</option>
+            <option value="Sopa/Crema">🥣 Sopa/Crema</option>
             <option value="Mix de Temporada">🥗 Mix de Temporada</option>
         </select>
     </div>
@@ -94,10 +96,10 @@
         </select>
         <div id="ui-prot" style="display:none; margin-top:10px;">
             <b>Seleccione 2 Proteínas:</b><br>
-            <input type="checkbox" class="p-check" value="Quinoa"> Quinoa | 
-            <input type="checkbox" class="p-check" value="Huevo"> Huevo | 
-            <input type="checkbox" class="p-check" value="Lentejas"> Lentejas | 
-            <input type="checkbox" class="p-check" value="Ave"> Suprema
+            <label class="prot-label"><input type="checkbox" class="p-check" value="Quinoa"> Quinoa</label>
+            <label class="prot-label"><input type="checkbox" class="p-check" value="Huevo"> Huevo</label>
+            <label class="prot-label"><input type="checkbox" class="p-check" value="Lentejas"> Lentejas</label>
+            <label class="prot-label"><input type="checkbox" class="p-check" value="Ave"> Suprema</label>
         </div>
     </div>
 
@@ -105,8 +107,12 @@
     <div id="resumen_cart" style="margin-top:15px;"></div>
 
     <div style="margin: 15px 0; background: #f0f7ff; padding: 10px; border-radius: 10px; border: 1px dashed #3498db;">
-        <input type="checkbox" id="bamboo" onchange="render()" style="width: auto;"> 🎋 <b>Cubiertos de Bamboo (+$1.000)</b><br>
-        <input type="checkbox" id="jugo" onchange="render()" style="width: auto; margin-top:10px;"> 🍋 <b>Jugo Natural de Limón (+$1.000)</b>
+        <label style="display: flex; align-items: center; gap: 8px;">
+            <input type="checkbox" id="bamboo" onchange="render()" style="width: 20px; height: 20px;"> 🎋 <b>Cubiertos de Bamboo (+$1.000)</b>
+        </label>
+        <label style="display: flex; align-items: center; gap: 8px; margin-top: 10px;">
+            <input type="checkbox" id="jugo" onchange="render()" style="width: 20px; height: 20px;"> 🍋 <b>Jugo Natural de Limón (+$1.000)</b>
+        </label>
     </div>
 
     <div class="step-title">3. Pago y Notas 💰</div>
@@ -117,7 +123,7 @@
         <option value="Tarjeta" disabled>Tarjeta de Débito (Próximamente)</option>
     </select>
 
-    <div id="info-tr" style="display:none; font-size:0.8rem; background:#eef2f7; padding:15px; border-radius:10px; position:relative;">
+    <div id="info-tr" style="display:none; font-size:0.8rem; background:#eef2f7; padding:15px; border-radius:10px;">
         <b>DATOS PARA TRANSFERIR:</b><br>
         BCI Cta Corriente: 30763118<br>
         Alex Berrios | 15.841.237-3<br>
@@ -224,11 +230,13 @@
         let msg = `*COMANDA - EL GOURMET PATAGON*%0A👤 *Cliente:* ${n}%0A📍 *MODALIDAD:* ${mod.toUpperCase()}%0A📍 *Dir:* ${document.getElementById('direccion').value}%0A%0A`;
         cart.forEach((it) => { msg += `🍴 *${it.name}:* ${it.ent} ${it.pri} ${it.pts}%0A`; });
         if(document.getElementById('jugo').checked) msg += `🥤 *Extra:* Jugo de Limón ($1.000)%0A`;
+        if(document.getElementById('bamboo').checked) msg += `🎋 *Extra:* Cubiertos Bamboo ($1.000)%0A`;
         if(mod==='retiro') msg += `🎁 *Beneficio Retiro Aplicado (-$500)*%0A`;
+        
         msg += `%0A💳 *Pago:* ${p} ${p==='Efectivo'?'(Vuelto: $'+(document.getElementById('paga_con').value - totalGlobal)+')':''}`;
         msg += `%0A💰 *TOTAL: $${totalGlobal.toLocaleString('es-CL')}*%0A%0A${controlMsg}`;
         window.open(`https://wa.me/56994004188?text=${msg}`);
     }
 </script>
 </body>
-</html>
+                                          </html>
