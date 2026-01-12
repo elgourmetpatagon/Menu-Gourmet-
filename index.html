@@ -19,9 +19,10 @@
 
         .grid-combos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .combo-card { border: 2px solid #f0f0f0; padding: 12px; border-radius: 15px; text-align: center; cursor: pointer; position: relative; display: flex; flex-direction: column; justify-content: center; min-height: 110px; }
+        .combo-card small { display: block; font-size: 0.72rem; color: var(--primary); font-weight: bold; margin-top: 4px; line-height: 1.1; }
         .combo-card input { position: absolute; opacity: 0; }
         .combo-card:has(input:checked) { border-color: var(--primary); background: #fff5eb; }
-        .focaccia-style { color: #27ae60 !important; font-size: 0.65rem !important; font-weight: bold; }
+        .focaccia-style { color: #27ae60 !important; font-size: 0.65rem !important; text-transform: uppercase; }
 
         .selector-box { background: #f9f9f9; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: none; border-left: 5px solid var(--primary); }
         select, input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 1rem; box-sizing: border-box; }
@@ -58,38 +59,39 @@
             <option value="0">Centro hasta Victoria (Gratis)</option>
             <option value="1500">Sobre Victoria (+$1.500)</option>
         </select>
-        <div id="msg-volumen" style="color:#856404; background:#fff3cd; padding:8px; border-radius:10px; font-size:0.8rem; display:none; margin-top:5px;">⚠️ Pedido grande: +15 min prep.</div>
-        <div id="msg-retiro" style="color:#b91c1c; background:#fee2e2; padding:8px; border-radius:10px; font-size:0.8rem; display:none; margin-top:5px;">⚠️ HORARIO RETIRO: 12:30 a 12:45 hrs.</div>
-        <div class="check-row"><input type="checkbox" id="acepta_horario"> <span style="font-size:0.8rem">Confirmo horarios de entrega/retiro.</span></div>
+        <div id="msg-volumen" style="color:#856404; background:#fff3cd; padding:8px; border-radius:10px; font-size:0.8rem; display:none; margin-top:5px; font-weight:bold;">⚠️ PEDIDO DE ALTO VOLUMEN: Tiempo de prep. +15 min aprox.</div>
+        <div id="msg-retiro" style="color:#b91c1c; background:#fee2e2; padding:8px; border-radius:10px; font-size:0.8rem; display:none; margin-top:5px; font-weight:bold;">⚠️ HORA LÍMITE RETIRO: 12:30 a 12:45 hrs.</div>
+        <div class="check-row"><input type="checkbox" id="acepta_horario"> <span style="font-size:0.8rem; color:#b91c1c;">Confirmo mi pedido y horarios.</span></div>
     </div>
 
     <div class="step-title">2. Arma tu Combo 🧩🥊</div>
     <div class="grid-combos">
-        <label class="combo-card"><input type="radio" name="combo" value="7500" data-name="Menú A" onclick="toggleUI('A')"><b>Menú A</b><span>$7.500</span><small class="focaccia-style">+ Focaccia</small></label>
-        <label class="combo-card"><input type="radio" name="combo" value="8500" data-name="Menú B" onclick="toggleUI('B')"><b>Menú B</b><span>$8.500</span><small class="focaccia-style">+ Focaccia</small></label>
-        <label class="combo-card"><input type="radio" name="combo" value="3500" data-name="Sopa/Crema" onclick="toggleUI('S')"><b>Sopa/Crema</b><span>$3.500</span><small class="focaccia-style">+ Focaccia</small></label>
-        <label class="combo-card"><input type="radio" name="combo" value="3500" data-name="Dulce" onclick="toggleUI('D')"><b>Dulce</b><span>$3.500</span></label>
+        <label class="combo-card"><input type="radio" name="combo" value="7500" data-name="Menú A" onclick="checkPromo('A')"><b>Menú A</b><span>$7.500</span><small>Principal</small><small class="focaccia-style">+ Focaccia cortesía</small></label>
+        <label class="combo-card"><input type="radio" name="combo" value="8500" data-name="Menú B" onclick="checkPromo('B')"><b>Menú B</b><span>$8.500</span><small>Entrante + Principal</small><small class="focaccia-style">+ Focaccia cortesía</small></label>
+        <label class="combo-card"><input type="radio" name="combo" value="3500" data-name="Sopa/Crema" onclick="checkPromo('S')"><b>Sopa/Crema</b><span>$3.500</span><small>500cc</small><small class="focaccia-style">+ Focaccia cortesía</small></label>
+        <label class="combo-card"><input type="radio" name="combo" value="3500" data-name="Dulce" onclick="checkPromo('D')"><b>Dulce</b><span>$3.500</span><small>Delicia del Día</small></label>
     </div>
 
     <div id="promo-box" style="background:#ebf5ff; padding:10px; border-radius:15px; border:1px solid var(--blue); margin-bottom:10px; display:none; text-align:center; cursor:pointer;" onclick="aplicarPromo()">
-        ✨ <b>¡EXPERIENCIA COMPLETA!</b> Suma tu Dulce por <b>+$2.000</b>
+        ✨ <b>¡EXPERIENCIA COMPLETA!</b> Suma tu Dulce por solo <b>+$2.000</b>
     </div>
 
-    <div id="ui-entrante" class="selector-box"><label><b>Entrante:</b></label><select id="entrante_val"><option value="Sopa/Crema">🥣 Sopa/Crema</option><option value="Mix de Temporada">🥗 Mix de Temporada</option></select></div>
-    <div id="ui-principal" class="selector-box"><label><b>Principal:</b></label><select id="principal_val" onchange="toggleProt()"><option value="Plato del Día">🥘 Plato del Día</option><option value="La Gran Ensalada">🥗 La Gran Ensalada</option></select>
+    <div id="ui-entrante" class="selector-box"><label><b>Seleccione Entrante:</b></label><select id="entrante_val"><option value="Sopa/Crema">🥣 Sopa/Crema</option><option value="Mix de Temporada">🥗 Mix de Temporada</option></select></div>
+    
+    <div id="ui-principal" class="selector-box"><label><b>Seleccione Principal:</b></label><select id="principal_val" onchange="toggleProt()"><option value="Plato del Día">🥘 Plato del Día</option><option value="La Gran Ensalada">🥗 La Gran Ensalada</option></select>
         <div id="ui-prot" style="display:none; margin-top:10px;"><b>Elija 2 Proteínas:</b><br>
-            <label class="check-row"><input type="checkbox" class="p-check" value="Quinoa" onclick="autoCheckExtra()"> Quinoa 🥗</label>
-            <label class="check-row"><input type="checkbox" class="p-check" value="Huevo" onclick="autoCheckExtra()"> Huevo 🥚</label>
-            <label class="check-row"><input type="checkbox" class="p-check" value="Lentejas" onclick="autoCheckExtra()"> Lentejas 🥘</label>
-            <label class="check-row"><input type="checkbox" class="p-check" value="Ave" onclick="autoCheckExtra()"> Ave 🍗</label>
+            <label class="check-row"><input type="checkbox" class="p-check" value="Quinoa Tricolor 🥗" onclick="autoCheckExtra()"> Quinoa Tricolor 🥗</label>
+            <label class="check-row"><input type="checkbox" class="p-check" value="Huevo Sancochado 🥚" onclick="autoCheckExtra()"> Huevo Sancochado 🥚</label>
+            <label class="check-row"><input type="checkbox" class="p-check" value="Dúo de Lentejas 🥘" onclick="autoCheckExtra()"> Dúo de Lentejas 🥘</label>
+            <label class="check-row"><input type="checkbox" class="p-check" value="Suprema de Ave 🍗" onclick="autoCheckExtra()"> Suprema de Ave 🍗</label>
         </div>
     </div>
 
     <div class="step-title">Extras ✨</div>
     <div class="seccion-extras">
-        <label class="check-row"><input type="checkbox" id="bamboo"> 🎋 Bamboo (+$1.000)</label>
-        <label class="check-row"><input type="checkbox" id="jugo"> 🍋 Dressing (+$1.000)</label>
-        <label class="check-row"><input type="checkbox" id="extra_prot"> 🥩 Extra Proteína (+$1.000)</label>
+        <label class="check-row"><input type="checkbox" id="bamboo"> 🎋 Cubiertos Bamboo (+$1.000)</label>
+        <label class="check-row"><input type="checkbox" id="jugo"> 🍋 Dressing Cítrico (+$1.000)</label>
+        <label class="check-row"><input type="checkbox" id="extra_prot"> 🥩 Proteína Extra (+$1.000)</label>
     </div>
 
     <button class="btn-add" onclick="addItem()">➕ AÑADIR AL PEDIDO</button>
@@ -119,41 +121,37 @@
 </div>
 
 <script>
-    // --- CONFIGURACIÓN GOOGLE SHEETS ---
-    const SHEET_URL = "TU_URL_AQUI"; // Reemplaza esto con tu URL de Apps Script
-
+    const SHEET_URL = "TU_URL_AQUI"; 
     let cart = []; let totalGlobal = 0;
 
     async function enviarAGoogleSheets(datos) {
         if(SHEET_URL === "TU_URL_AQUI") return;
         try {
-            await fetch(SHEET_URL, {
-                method: 'POST',
-                mode: 'no-cors',
-                body: JSON.stringify(datos)
-            });
-        } catch (e) { console.error("Error en Sheets:", e); }
+            fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(datos) });
+        } catch (e) { console.error("Error Sheets:", e); }
     }
 
-    function toggleUI(t){
+    function checkPromo(t){
         document.getElementById('ui-entrante').style.display=(t==='B')?'block':'none';
         document.getElementById('ui-principal').style.display=(t==='A'||t==='B')?'block':'none';
         document.getElementById('promo-box').style.display=(t==='A'||t==='B')?'block':'none';
     }
+
     function aplicarPromo(){
         cart.push({ name: "Dulce (Promo Completa)", price: 2000, ent: "", pri: "", pts: "", extras: {bamboo:false, jugo:false, extra_prot:false}});
         document.getElementById('promo-box').style.display = 'none'; render();
     }
+
     function toggleProt(){ document.getElementById('ui-prot').style.display=(document.getElementById('principal_val').value==='La Gran Ensalada')?'block':'none'; }
     function autoCheckExtra(){ document.getElementById('extra_prot').checked = (document.querySelectorAll('.p-check:checked').length > 2); }
     function copyData(){ navigator.clipboard.writeText("BCI 30763118, Alex Berrios, 15.841.237-3"); alert("Datos copiados."); }
-    
+
     function addItem(){
         const c = document.querySelector('input[name="combo"]:checked');
         if(!c) return alert("Selecciona un combo");
         const isEnsalada = document.getElementById('principal_val').value === 'La Gran Ensalada' && (c.dataset.name.includes('Menú'));
         const prots = Array.from(document.querySelectorAll('.p-check:checked')).map(p => p.value);
-        if(isEnsalada && prots.length < 2) return alert("Elige 2 proteínas.");
+        if(isEnsalada && prots.length < 2) return alert("Elige al menos 2 proteínas.");
 
         cart.push({
             name: c.dataset.name, price: parseInt(c.value),
@@ -202,21 +200,9 @@
         const n = document.getElementById('nombre').value; const p = document.getElementById('pago').value;
         if(!n || cart.length === 0 || !p) return alert("Faltan datos.");
 
-        // Preparar datos para Google Sheets
         let detallePedido = cart.map(it => `${it.name} (${it.ent} ${it.pri} ${it.pts})`).join(" | ");
-        const datosComanda = {
-            nombre: n,
-            modalidad: document.getElementById('modalidad').value,
-            pedido: detallePedido,
-            total: totalGlobal,
-            pago: p,
-            notas: document.getElementById('observaciones').value
-        };
+        enviarAGoogleSheets({ nombre: n, modalidad: document.getElementById('modalidad').value, pedido: detallePedido, total: totalGlobal, pago: p, notas: document.getElementById('observaciones').value });
 
-        // Registro silencioso en Sheets
-        enviarAGoogleSheets(datosComanda);
-
-        // Envío a WhatsApp
         let msg = `*PEDIDO - EL GOURMET PATAGON*%0A👤 *Cliente:* ${n}%0A📍 *MODALIDAD:* ${document.getElementById('modalidad').value.toUpperCase()}%0A%0A`;
         cart.forEach((it) => { 
             let ex = (it.extras.bamboo?" + 🎋 Bamboo":"") + (it.extras.jugo?" + 🍋 Dressing":"") + (it.extras.extra_prot?" + 🥩 Prot. Extra":"");
