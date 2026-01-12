@@ -1,30 +1,200 @@
-<style>
-    /* Agrego estilo para la nueva variante gourmet */
-    .gourmet-info { background: #fdf2f2; border: 1px solid #f5c2c7; color: #842029; padding: 12px; border-radius: 12px; margin-top: 10px; font-size: 0.85rem; line-height: 1.4; }
-    .gourmet-info b { color: #b02a37; }
-</style>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gourmet Patagon - Gestión de Pedidos</title>
+    <style>
+        :root { --primary: #e67e22; --dark: #2c3e50; --success: #25d366; --bg: #fdfaf6; --danger: #e74c3c; --blue: #3498db; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); padding: 10px; margin: 0; }
+        .container { max-width: 480px; margin: auto; background: white; padding: 20px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
+        .step-title { font-size: 0.9rem; color: var(--primary); text-transform: uppercase; font-weight: 800; margin: 15px 0 10px; border-bottom: 1px solid #eee; }
+        
+        .logistica-box { background: #fff5eb; padding: 15px; border-radius: 15px; border: 1px solid var(--primary); margin-bottom: 15px; }
+        .info-transferencia { background: #eef2f7; border: 2px solid var(--blue); padding: 15px; border-radius: 15px; margin: 10px 0; font-size: 0.85rem; display: none; }
+        .gourmet-info { background: #fdf2f2; border: 1px solid #f5c2c7; color: #842029; padding: 12px; border-radius: 12px; margin-top: 10px; font-size: 0.85rem; line-height: 1.4; }
+        .gourmet-info b { color: #b02a37; }
+        .btn-copy { background: var(--blue); color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer; font-size: 0.7rem; margin-top: 5px; width: auto; }
 
-<div id="info-tr" class="info-transferencia">
-    <b>BCI Cta Corriente: 30763118</b><br>Alex Berrios | 15.841.237-3<br>
-    <button class="btn-copy" onclick="copyData()">📋 COPIAR DATOS</button>
-    <div class="gourmet-info">
-        👨‍🍳 <b>Trato hecho:</b> En cuanto recibamos tu comprobante, el Chef activará tu pedido. En El Gourmet Patagon cocinamos al momento para garantizar la frescura que te mereces.
+        .grid-combos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
+        .combo-card { border: 2px solid #f0f0f0; padding: 12px; border-radius: 15px; text-align: center; cursor: pointer; position: relative; display: flex; flex-direction: column; justify-content: center; min-height: 110px; }
+        .combo-card input { position: absolute; opacity: 0; }
+        .combo-card:has(input:checked) { border-color: var(--primary); background: #fff5eb; }
+        .focaccia-style { color: #27ae60 !important; font-size: 0.65rem !important; font-weight: bold; }
+
+        .selector-box { background: #f9f9f9; padding: 15px; border-radius: 15px; margin-bottom: 10px; display: none; border-left: 5px solid var(--primary); }
+        select, input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 1rem; box-sizing: border-box; }
+        
+        .seccion-extras { background: #f0f7ff; padding: 15px; border-radius: 15px; border: 1px dashed var(--blue); margin-top: 10px; }
+        .check-row { display: flex; align-items: center; gap: 10px; margin: 10px 0; font-size: 0.9rem; cursor: pointer; font-weight: bold; }
+
+        .resumen-lista { background: #fff; border: 1px solid #eee; border-radius: 15px; padding: 10px; margin-top: 15px; }
+        .cart-item { background: #f8f9fa; padding: 12px; border-radius: 10px; margin-bottom: 8px; font-size: 0.85rem; border-left: 4px solid var(--primary); display: flex; justify-content: space-between; align-items: center; }
+        
+        .total-banner { background: var(--dark); color: white; padding: 15px; border-radius: 15px; text-align: center; font-weight: bold; font-size: 1.2rem; margin: 15px 0; }
+        button { border-radius: 12px; width: 100%; font-weight: bold; cursor: pointer; border: none; }
+        .btn-add { background: var(--primary); color: white; padding: 15px; margin-top: 15px; }
+        .btn-send { background: var(--success); color: white; padding: 20px; font-size: 1.2rem; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h2>🏔️ EL GOURMET PATAGON</h2>
+        <span>Cocina Taller - Coyhaique</span>
     </div>
+
+    <div class="step-title">1. Datos y Modalidad 🚚</div>
+    <div class="logistica-box">
+        <input type="text" id="nombre" placeholder="Nombre y Apellido">
+        <input type="text" id="direccion" placeholder="Dirección de entrega">
+        <select id="modalidad" onchange="render()">
+            <option value="reparto">Servicio de Reparto (12:45 - 13:30)</option>
+            <option value="retiro">Retiro en Cocina Taller (Incentivo -$500)</option>
+        </select>
+        <select id="zona" onchange="render()">
+            <option value="0">Centro hasta Victoria (Gratis)</option>
+            <option value="1500">Sobre Victoria (+$1.500)</option>
+        </select>
+        <div id="msg-volumen" style="color:#856404; background:#fff3cd; padding:8px; border-radius:10px; font-size:0.8rem; display:none; margin-top:5px;">⚠️ Pedido grande: +15 min prep.</div>
+        <div id="msg-retiro" style="color:#b91c1c; background:#fee2e2; padding:8px; border-radius:10px; font-size:0.8rem; display:none; margin-top:5px;">⚠️ HORARIO RETIRO: 12:30 a 12:45 hrs.</div>
+        <div class="check-row"><input type="checkbox" id="acepta_horario"> <span style="font-size:0.8rem">Confirmo horarios de entrega/retiro.</span></div>
+    </div>
+
+    <div class="step-title">2. Arma tu Combo 🧩🥊</div>
+    <div class="grid-combos">
+        <label class="combo-card"><input type="radio" name="combo" value="7500" data-name="Menú A" onclick="toggleUI('A')"><b>Menú A</b><span>$7.500</span><small class="focaccia-style">+ Focaccia</small></label>
+        <label class="combo-card"><input type="radio" name="combo" value="8500" data-name="Menú B" onclick="toggleUI('B')"><b>Menú B</b><span>$8.500</span><small class="focaccia-style">+ Focaccia</small></label>
+        <label class="combo-card"><input type="radio" name="combo" value="3500" data-name="Sopa/Crema" onclick="toggleUI('S')"><b>Sopa/Crema</b><span>$3.500</span><small class="focaccia-style">+ Focaccia</small></label>
+        <label class="combo-card"><input type="radio" name="combo" value="3500" data-name="Dulce" onclick="toggleUI('D')"><b>Dulce</b><span>$3.500</span></label>
+    </div>
+
+    <div id="promo-box" style="background:#ebf5ff; padding:10px; border-radius:15px; border:1px solid var(--blue); margin-bottom:10px; display:none; text-align:center; cursor:pointer;" onclick="aplicarPromo()">
+        ✨ <b>¡EXPERIENCIA COMPLETA!</b> Suma tu Dulce por <b>+$2.000</b>
+    </div>
+
+    <div id="ui-entrante" class="selector-box"><label><b>Entrante:</b></label><select id="entrante_val"><option value="Sopa/Crema">🥣 Sopa/Crema</option><option value="Mix de Temporada">🥗 Mix de Temporada</option></select></div>
+    <div id="ui-principal" class="selector-box"><label><b>Principal:</b></label><select id="principal_val" onchange="toggleProt()"><option value="Plato del Día">🥘 Plato del Día</option><option value="La Gran Ensalada">🥗 La Gran Ensalada</option></select>
+        <div id="ui-prot" style="display:none; margin-top:10px;"><b>Elija 2 Proteínas:</b><br>
+            <label class="check-row"><input type="checkbox" class="p-check" value="Quinoa" onclick="autoCheckExtra()"> Quinoa 🥗</label>
+            <label class="check-row"><input type="checkbox" class="p-check" value="Huevo" onclick="autoCheckExtra()"> Huevo 🥚</label>
+            <label class="check-row"><input type="checkbox" class="p-check" value="Lentejas" onclick="autoCheckExtra()"> Lentejas 🥘</label>
+            <label class="check-row"><input type="checkbox" class="p-check" value="Ave" onclick="autoCheckExtra()"> Ave 🍗</label>
+        </div>
+    </div>
+
+    <div class="step-title">Extras ✨</div>
+    <div class="seccion-extras">
+        <label class="check-row"><input type="checkbox" id="bamboo"> 🎋 Bamboo (+$1.000)</label>
+        <label class="check-row"><input type="checkbox" id="jugo"> 🍋 Dressing (+$1.000)</label>
+        <label class="check-row"><input type="checkbox" id="extra_prot"> 🥩 Extra Proteína (+$1.000)</label>
+    </div>
+
+    <button class="btn-add" onclick="addItem()">➕ AÑADIR AL PEDIDO</button>
+
+    <div id="resumen_visual" style="display:none; margin-top:20px;"><div class="step-title">Tu Selección 🛍️</div><div id="items_cart" class="resumen-lista"></div></div>
+
+    <div class="step-title">3. Pago y Notas 💰</div>
+    <select id="pago" onchange="render()">
+        <option value="">Método de pago...</option>
+        <option value="Transferencia">Transferencia (Descuento -$500)</option>
+        <option value="Efectivo">Efectivo</option>
+    </select>
+
+    <div id="info-tr" class="info-transferencia">
+        <b>BCI Cta Corriente: 30763118</b><br>Alex Berrios | 15.841.237-3<br>
+        <button class="btn-copy" onclick="copyData()">📋 COPIAR DATOS</button>
+        <div class="gourmet-info">
+            👨‍🍳 <b>Trato hecho:</b> En cuanto recibamos tu comprobante, el Chef activará tu pedido. En El Gourmet Patagon cocinamos al momento para garantizar la frescura que te mereces.
+        </div>
+    </div>
+
+    <div id="info-ef" style="display:none;"><input type="number" id="paga_con" placeholder="¿Con cuánto pagas?" onkeyup="calcVuelto()"><div id="vuelto_resultado" style="background:#dcfce7; padding:10px; border-radius:10px; font-weight:bold; display:none; margin-top:5px;"></div></div>
+
+    <textarea id="observaciones" rows="2" placeholder="Notas adicionales..."></textarea>
+    <div class="total-banner" id="total_final">TOTAL A PAGAR: $0</div>
+    <button class="btn-send" onclick="send()">ENVIAR A WHATSAPP ✅</button>
 </div>
 
 <script>
-    // URL DE TU IMPLEMENTACIÓN DE GOOGLE APPS SCRIPT
-    const SHEET_URL = "PEGA_AQUI_TU_URL_DE_APPS_SCRIPT";
+    // --- CONFIGURACIÓN GOOGLE SHEETS ---
+    const SHEET_URL = "TU_URL_AQUI"; // Reemplaza esto con tu URL de Apps Script
+
+    let cart = []; let totalGlobal = 0;
 
     async function enviarAGoogleSheets(datos) {
-        if(SHEET_URL === "PEGA_AQUI_TU_URL_DE_APPS_SCRIPT") return;
+        if(SHEET_URL === "TU_URL_AQUI") return;
         try {
             await fetch(SHEET_URL, {
                 method: 'POST',
                 mode: 'no-cors',
                 body: JSON.stringify(datos)
             });
-        } catch (e) { console.error("Error Sheets:", e); }
+        } catch (e) { console.error("Error en Sheets:", e); }
+    }
+
+    function toggleUI(t){
+        document.getElementById('ui-entrante').style.display=(t==='B')?'block':'none';
+        document.getElementById('ui-principal').style.display=(t==='A'||t==='B')?'block':'none';
+        document.getElementById('promo-box').style.display=(t==='A'||t==='B')?'block':'none';
+    }
+    function aplicarPromo(){
+        cart.push({ name: "Dulce (Promo Completa)", price: 2000, ent: "", pri: "", pts: "", extras: {bamboo:false, jugo:false, extra_prot:false}});
+        document.getElementById('promo-box').style.display = 'none'; render();
+    }
+    function toggleProt(){ document.getElementById('ui-prot').style.display=(document.getElementById('principal_val').value==='La Gran Ensalada')?'block':'none'; }
+    function autoCheckExtra(){ document.getElementById('extra_prot').checked = (document.querySelectorAll('.p-check:checked').length > 2); }
+    function copyData(){ navigator.clipboard.writeText("BCI 30763118, Alex Berrios, 15.841.237-3"); alert("Datos copiados."); }
+    
+    function addItem(){
+        const c = document.querySelector('input[name="combo"]:checked');
+        if(!c) return alert("Selecciona un combo");
+        const isEnsalada = document.getElementById('principal_val').value === 'La Gran Ensalada' && (c.dataset.name.includes('Menú'));
+        const prots = Array.from(document.querySelectorAll('.p-check:checked')).map(p => p.value);
+        if(isEnsalada && prots.length < 2) return alert("Elige 2 proteínas.");
+
+        cart.push({
+            name: c.dataset.name, price: parseInt(c.value),
+            ent: (c.dataset.name==='Menú B')?document.getElementById('entrante_val').value:'',
+            pri: (c.dataset.name.includes('Menú'))?document.getElementById('principal_val').value:'',
+            pts: isEnsalada ? prots.join("/") : "",
+            extras: { bamboo: document.getElementById('bamboo').checked, jugo: document.getElementById('jugo').checked, extra_prot: document.getElementById('extra_prot').checked }
+        });
+        c.checked = false; document.querySelectorAll('.p-check').forEach(p => p.checked = false);
+        ['bamboo','jugo','extra_prot'].forEach(id => document.getElementById(id).checked = false);
+        render();
+    }
+
+    function render(){
+        const itemsDiv = document.getElementById('items_cart'); itemsDiv.innerHTML = ""; let sub = 0;
+        document.getElementById('resumen_visual').style.display = cart.length > 0 ? "block" : "none";
+        cart.forEach((it, i) => {
+            let itemTotal = it.price;
+            let exT = (it.extras.bamboo?"+🎋 ":"")+(it.extras.jugo?"+🍋 ":"")+(it.extras.extra_prot?"+🥩":"");
+            if(it.extras.bamboo) itemTotal += 1000; if(it.extras.jugo) itemTotal += 1000; if(it.extras.extra_prot) itemTotal += 1000;
+            sub += itemTotal;
+            itemsDiv.innerHTML += `<div class="cart-item"><div><b>${it.name}</b><br><small>${it.ent} ${it.pri} ${it.pts ? '['+it.pts+']' : ''}</small><br><small style="color:var(--blue)">${exT}</small></div><div style="text-align:right"><b>$${itemTotal.toLocaleString('es-CL')}</b><br><span onclick="cart.splice(${i},1);render()" style="color:red; cursor:pointer">×</span></div></div>`;
+        });
+        const mod = document.getElementById('modalidad').value; const pgo = document.getElementById('pago').value;
+        const z = (mod === 'reparto') ? parseInt(document.getElementById('zona').value) : 0;
+        const descR = (mod === 'retiro') ? -500 : 0; const descT = (pgo === 'Transferencia') ? -500 : 0;
+        document.getElementById('msg-retiro').style.display = (mod === 'retiro') ? 'block' : 'none';
+        document.getElementById('msg-volumen').style.display = cart.length >= 5 ? 'block' : 'none';
+        document.getElementById('info-tr').style.display = (pgo === 'Transferencia') ? 'block' : 'none';
+        document.getElementById('info-ef').style.display = (pgo === 'Efectivo') ? 'block' : 'none';
+        totalGlobal = sub + z + descR + descT;
+        document.getElementById('total_final').innerText = "TOTAL A PAGAR: $" + totalGlobal.toLocaleString('es-CL');
+        calcVuelto();
+    }
+
+    function calcVuelto(){
+        const pagaCon = parseInt(document.getElementById('paga_con').value);
+        const v = document.getElementById('vuelto_resultado');
+        if(!isNaN(pagaCon) && pagaCon >= totalGlobal && document.getElementById('pago').value === 'Efectivo'){
+            v.style.display = 'block'; v.innerText = "SU VUELTO: $" + (pagaCon - totalGlobal).toLocaleString('es-CL');
+        } else { v.style.display = 'none'; }
     }
 
     function send(){
@@ -32,9 +202,8 @@
         const n = document.getElementById('nombre').value; const p = document.getElementById('pago').value;
         if(!n || cart.length === 0 || !p) return alert("Faltan datos.");
 
-        let detallePedido = cart.map(it => `${it.name} (${it.ent} ${it.pri})`).join(", ");
-        
-        // Datos para Google Sheets
+        // Preparar datos para Google Sheets
+        let detallePedido = cart.map(it => `${it.name} (${it.ent} ${it.pri} ${it.pts})`).join(" | ");
         const datosComanda = {
             nombre: n,
             modalidad: document.getElementById('modalidad').value,
@@ -51,11 +220,12 @@
         let msg = `*PEDIDO - EL GOURMET PATAGON*%0A👤 *Cliente:* ${n}%0A📍 *MODALIDAD:* ${document.getElementById('modalidad').value.toUpperCase()}%0A%0A`;
         cart.forEach((it) => { 
             let ex = (it.extras.bamboo?" + 🎋 Bamboo":"") + (it.extras.jugo?" + 🍋 Dressing":"") + (it.extras.extra_prot?" + 🥩 Prot. Extra":"");
-            msg += `🍴 *${it.name}:* ${it.ent} ${it.pri} [${it.pts}]${ex}%0A`; 
+            msg += `🍴 *${it.name}:* ${it.ent} ${it.pri} ${it.pts ? '['+it.pts+']' : ''}${ex}%0A`; 
         });
         if(p === 'Transferencia') msg += `%0A📸 *ADJUNTA EL COMPROBANTE PARA INICIAR PREPARACIÓN.*`;
         msg += `%0A%0A💰 *TOTAL: $${totalGlobal.toLocaleString('es-CL')}*%0A💳 *Pago:* ${p}`;
         window.open(`https://wa.me/56994004188?text=${msg}`);
     }
-    // ... (resto de funciones addItem, render, etc. se mantienen igual)
 </script>
+</body>
+</html>
