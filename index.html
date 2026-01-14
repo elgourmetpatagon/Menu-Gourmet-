@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gourmet Patagon - Gestión de Pedidos</title>
+    <title>Gourmet Patagon - Pedidos</title>
     <style>
         :root { --primary: #e67e22; --dark: #2c3e50; --success: #25d366; --bg: #fdfaf6; --danger: #e74c3c; --blue: #3498db; --gold: #f1c40f; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); padding: 10px; margin: 0; }
@@ -11,36 +11,31 @@
         .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
         .step-title { font-size: 0.9rem; color: var(--primary); text-transform: uppercase; font-weight: 800; margin: 15px 0 10px; border-bottom: 1px solid #eee; }
         
-        /* Logística */
-        .logistica-box { background: #fff5eb; padding: 15px; border-radius: 15px; border: 1px solid var(--primary); margin-bottom: 15px; transition: all 0.3s ease; }
-        .highlight-retiro { background: #e8f5e9 !important; border: 2px solid #27ae60 !important; animation: flash-green 3s infinite; }
-        @keyframes flash-green { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.02); } }
-        .confirm-frame { border: 2px solid var(--danger); padding: 12px; border-radius: 10px; background: #fff1f0; display: flex; align-items: center; gap: 10px; margin-top: 10px; }
+        /* Logística y Confirmación Horizontal */
+        .logistica-box { background: #fff5eb; padding: 15px; border-radius: 15px; border: 1px solid var(--primary); margin-bottom: 15px; }
+        .confirm-frame { border: 2px solid var(--danger); padding: 10px; border-radius: 10px; background: #fff1f0; display: flex; flex-direction: row; align-items: center; gap: 10px; margin-top: 10px; }
+        .confirm-frame input { width: 22px; height: 22px; flex-shrink: 0; cursor: pointer; }
+        .confirm-frame label { font-size: 0.82rem; font-weight: bold; color: var(--danger); cursor: pointer; }
 
-        /* Grid Combos Refinado */
+        /* Grid Combos */
         .grid-combos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .combo-card { border: 2px solid #f0f0f0; padding: 10px; border-radius: 15px; text-align: center; cursor: pointer; position: relative; display: flex; flex-direction: column; justify-content: center; min-height: 90px; }
+        .combo-card { border: 2px solid #f0f0f0; padding: 10px; border-radius: 15px; text-align: center; cursor: pointer; position: relative; display: flex; flex-direction: column; justify-content: center; min-height: 95px; }
         .combo-card input { position: absolute; opacity: 0; }
         .combo-card:has(input:checked) { border-color: var(--primary); background: #fff5eb; }
-        .combo-card b { font-size: 0.95rem; display: block; }
-        .combo-card span { font-size: 0.75rem; color: #666; font-weight: 600; margin: 2px 0; }
+        .combo-card b { font-size: 0.95rem; }
+        .combo-card span { font-size: 0.72rem; color: #666; font-weight: 600; margin: 2px 0; }
         .combo-card i { font-style: normal; font-size: 0.9rem; color: var(--primary); font-weight: 800; }
 
-        /* Promoción Dulce */
+        /* Promo y Listas */
         @keyframes pulse-yellow { 0% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0.7); } 70% { box-shadow: 0 0 0 12px rgba(241, 196, 15, 0); } 100% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0); } }
-        #promo-box { background: #fff9db; padding: 15px; border-radius: 15px; border: 2px solid var(--gold); margin-bottom: 15px; display: none; text-align: center; animation: pulse-yellow 2s infinite; }
-
-        /* Listas Verticales Compactas */
+        #promo-box { background: #fff9db; padding: 12px; border-radius: 15px; border: 2px solid var(--gold); margin-bottom: 15px; display: none; text-align: center; animation: pulse-yellow 2s infinite; cursor: pointer; }
         .vertical-list { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
-        .check-row-vertical { display: flex; align-items: center; gap: 10px; font-weight: bold; background: #fff; padding: 10px; border-radius: 10px; border: 1px solid #eee; cursor: pointer; font-size: 0.9rem; }
-        .check-row-vertical input { width: 18px; height: 18px; margin: 0; }
-
+        .check-row-vertical { display: flex; align-items: center; gap: 10px; font-weight: bold; background: #fff; padding: 10px; border-radius: 10px; border: 1px solid #eee; cursor: pointer; font-size: 0.88rem; }
         .selector-box { background: #f9f9f9; padding: 12px; border-radius: 15px; margin-bottom: 10px; display: none; border-left: 5px solid var(--primary); }
-        select, input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 10px; font-size: 1rem; box-sizing: border-box; }
         
         .total-banner { background: var(--dark); color: white; padding: 15px; border-radius: 15px; text-align: center; font-weight: bold; font-size: 1.2rem; margin: 15px 0; }
-        .btn-add { background: var(--primary); color: white; padding: 15px; margin-top: 5px; width: 100%; border-radius: 12px; font-weight: bold; border: none; cursor: pointer; }
-        .btn-send { background: var(--success); color: white; padding: 20px; font-size: 1.2rem; width: 100%; border-radius: 12px; font-weight: bold; border: none; }
+        .btn-send { background: var(--success); color: white; padding: 20px; font-size: 1.2rem; width: 100%; border-radius: 12px; font-weight: bold; border: none; cursor: pointer; }
+        input[type="text"], select, textarea { width: 100%; padding: 12px; margin-bottom: 8px; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; }
     </style>
 </head>
 <body>
@@ -52,7 +47,7 @@
     </div>
 
     <div class="step-title">1. Logística 🚚</div>
-    <div id="log-box" class="logistica-box">
+    <div class="logistica-box" id="log-box">
         <input type="text" id="nombre" placeholder="Nombre y Apellido">
         <input type="text" id="direccion" placeholder="Dirección de entrega">
         <select id="modalidad" onchange="render()">
@@ -63,9 +58,14 @@
             <option value="0">Centro hasta Victoria (GRATIS 🚚)</option>
             <option value="1500">Victoria hacia 🏔️ (+$1.500)</option>
         </select>
+        
+        <div id="msg-retiro" style="display:none; background:#fff8e1; border:1px solid #ffca28; padding:10px; border-radius:10px; font-size:0.75rem; color:#856404; margin-bottom:10px;">
+            ⚠️ <b>IMPORTANTE RETIRO:</b> Horario entre 12:30 a 12:45 hrs. De lo contrario, se dispondrán en cooler para mantenimiento.
+        </div>
+
         <div class="confirm-frame">
             <input type="checkbox" id="acepta_horario">
-            <label for="acepta_horario" style="font-size:0.85rem; font-weight:bold; cursor:pointer; color:var(--danger);">¡Confirmo mi pedido y horario! ✅</label>
+            <label for="acepta_horario">Confirmo mi pedido y horarios (Toma hasta 12:15) ✅</label>
         </div>
     </div>
 
@@ -79,7 +79,7 @@
 
     <div id="promo-box" onclick="aplicarPromo()">
         <span>🥞🍯🍓</span><br><b>¡EXPERIENCIA COMPLETA!</b>
-        <small>Suma tu Dulce por solo <b>+$2.000</b>. ¡Pinche aquí! ✨</small>
+        <small>Suma tu Dulce por solo <b>+$2.000</b>. ¡Pincha aquí! ✨</small>
     </div>
 
     <div id="ui-entrante" class="selector-box"><b>Entrante:</b><select id="entrante_val"><option value="Sopa/Crema">🥣 Sopa/Crema</option><option value="Mix de Temporada">🥗 Mix de Temporada</option></select></div>
@@ -100,11 +100,11 @@
     <div class="vertical-list">
         <label class="check-row-vertical"><input type="checkbox" id="bamboo"> 🎋 Cubiertos Bamboo (+$1.000)</label>
         <label class="check-row-vertical"><input type="checkbox" id="jugo"> 🍋 Dressing Cítrico (+$1.000)</label>
-        <label class="check-row-vertical"><input type="checkbox" id="extra_prot"> 🥩 Proteína Extra (+$1.000)</label>
+        <label class="check-row-vertical"><input type="checkbox" id="extra_prot"> 🥩 Proteína Extra Ensalada (+$1.000)</label>
     </div>
 
-    <button class="btn-add" onclick="addItem()">➕ AÑADIR SELECCIÓN</button>
-    <div id="resumen_visual" style="display:none; margin-top:20px;"><div id="items_cart" class="resumen-lista"></div></div>
+    <button onclick="addItem()" style="background:var(--primary); color:white; padding:15px; margin-top:10px; width:100%; border-radius:12px; font-weight:bold; border:none; cursor:pointer;">➕ AÑADIR SELECCIÓN</button>
+    <div id="resumen_visual" style="display:none; margin-top:20px;"><div id="items_cart" style="background:#fff; border:1px solid #eee; border-radius:15px; padding:10px;"></div></div>
 
     <div class="step-title">3. Forma de Pago 💰</div>
     <select id="pago" onchange="render()">
@@ -114,12 +114,12 @@
         <option value="Tarjeta" disabled>💳 Tarjeta Bancaria (próximamente 😏)</option>
     </select>
 
-    <div id="info-tr" style="display:none; background:#eef2f7; padding:15px; border-radius:15px; border:2px solid var(--blue); margin-top:10px;">
+    <div id="info-tr" style="display:none; background:#eef2f7; padding:15px; border-radius:15px; border:2px solid var(--blue); margin-top:10px; font-size:0.85rem;">
         <b>BCI Cta Corriente: 30763118</b><br>Alex Berrios | 15.841.237-3
-        <button onclick="copyData()" style="margin:10px 0; background:var(--blue); color:white; padding:12px; width:100%; border-radius:8px; border:none; font-weight:bold;">📋 COPIAR DATOS</button>
+        <button onclick="copyData()" style="margin-top:10px; background:var(--blue); color:white; padding:10px; width:100%; border-radius:8px; border:none; font-weight:bold;">📋 COPIAR DATOS</button>
     </div>
 
-    <div id="info-ef" style="display:none;"><input type="number" id="paga_con" placeholder="¿Con cuánto pagas?" onkeyup="calcVuelto()"><div id="vuelto_resultado" style="background:#dcfce7; padding:10px; border-radius:10px; font-weight:bold; margin-top:5px;"></div></div>
+    <div id="info-ef" style="display:none; margin-top:10px;"><input type="number" id="paga_con" placeholder="¿Con cuánto pagas?" onkeyup="calcVuelto()"><div id="vuelto_resultado" style="background:#dcfce7; padding:10px; border-radius:10px; font-weight:bold; margin-top:5px;"></div></div>
 
     <div class="step-title">Notas o Sugerencias</div>
     <textarea id="observaciones" rows="2">🤤👨🏽‍🍳😋💪🏽</textarea>
@@ -129,13 +129,18 @@
 
 <script>
     const SHEET_URL = "TU_URL_AQUI"; let cart = []; let totalGlobal = 0;
-    async function enviarAGoogleSheets(datos) { if(SHEET_URL !== "TU_URL_AQUI") fetch(SHEET_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify(datos) }); }
+
     function checkPromo(t){
-        document.getElementById('ui-entrante').style.display=(t==='B')?'block':'none';
-        document.getElementById('ui-principal').style.display=(t==='A'||t==='B')?'block':'none';
-        document.getElementById('promo-box').style.display=(t==='A'||t==='B')?'block':'none';
+        document.getElementById('ui-entrante').style.display = (t==='B') ? 'block' : 'none';
+        document.getElementById('ui-principal').style.display = (t==='A' || t==='B') ? 'block' : 'none';
+        document.getElementById('promo-box').style.display = (t==='A' || t==='B') ? 'block' : 'none';
     }
-    function aplicarPromo(){ cart.push({ name: "Dulce (Promo)", price: 2000, ent: "", pri: "", pts: "", extras: {bamboo:false, jugo:false, extra_prot:false}}); document.getElementById('promo-box').style.display = 'none'; render(); }
+
+    function aplicarPromo(){
+        cart.push({ name: "Dulce (Promo)", price: 2000, ent: "", pri: "", pts: "", extras: {bamboo:false, jugo:false, extra_prot:false}});
+        document.getElementById('promo-box').style.display = 'none'; render();
+    }
+
     function toggleProt(){ document.getElementById('ui-prot').style.display=(document.getElementById('principal_val').value==='La Gran Ensalada')?'block':'none'; }
     function copyData(){ navigator.clipboard.writeText("BCI 30763118, Alex Berrios, 15.841.237-3"); alert("Datos copiados."); }
 
@@ -144,7 +149,7 @@
         const b = document.getElementById('bamboo').checked;
         const j = document.getElementById('jugo').checked;
         const ep = document.getElementById('extra_prot').checked;
-        if(!c && !b && !j) return alert("Selecciona un plato o complemento.");
+        if(!c && !b && !j) return alert("Selecciona algo.");
         if(c){
             const isE = document.getElementById('principal_val').value==='La Gran Ensalada' && (c.dataset.name.includes('Menú'));
             const pts = Array.from(document.querySelectorAll('.p-check:checked')).map(p => p.value);
@@ -165,14 +170,12 @@
         document.getElementById('resumen_visual').style.display = cart.length > 0 ? "block" : "none";
         cart.forEach((it, i) => {
             let itemTotal = it.price;
-            let exT = (it.extras.bamboo?"+🎋 ":"")+(it.extras.jugo?"+🍋 ":"")+(it.extras.extra_prot?"+🥩":"");
             if(it.extras.bamboo) itemTotal += 1000; if(it.extras.jugo) itemTotal += 1000; if(it.extras.extra_prot) itemTotal += 1000;
             sub += itemTotal;
-            itemsDiv.innerHTML += `<div class="cart-item"><div><b>${it.name}</b><br><small>${it.ent} ${it.pri} ${it.pts}</small></div><div style="text-align:right"><b>$${itemTotal}</b><br><span onclick="cart.splice(${i},1);render()" style="color:red; cursor:pointer">×</span></div></div>`;
+            itemsDiv.innerHTML += `<div style="background:#f8f9fa; padding:10px; border-radius:8px; margin-bottom:5px; border-left:4px solid var(--primary); display:flex; justify-content:space-between; align-items:center; font-size:0.85rem;"><div><b>${it.name}</b><br><small>${it.ent} ${it.pri} ${it.pts}</small></div><div><b>$${itemTotal}</b> <span onclick="cart.splice(${i},1);render()" style="color:red; cursor:pointer; font-weight:bold; margin-left:10px;">×</span></div></div>`;
         });
         const mod = document.getElementById('modalidad').value;
-        const logBox = document.getElementById('log-box');
-        if(mod === 'retiro') { logBox.classList.add('highlight-retiro'); } else { logBox.classList.remove('highlight-retiro'); }
+        document.getElementById('msg-retiro').style.display = (mod === 'retiro') ? 'block' : 'none';
         const z = (mod === 'reparto') ? parseInt(document.getElementById('zona').value) : 0;
         const descR = (mod === 'retiro') ? -500 : 0;
         const descT = (document.getElementById('pago').value === 'Transferencia') ? -500 : 0;
@@ -192,11 +195,19 @@
     }
 
     function send(){
+        const ahora = new Date();
+        const limite = new Date();
+        limite.setHours(12, 15, 0);
+        
+        if(ahora > limite) {
+            alert("⏰ Lo sentimos, la toma de pedidos cerró a las 12:15. ¡Te esperamos mañana!");
+            return;
+        }
+
         if(!document.getElementById('acepta_horario').checked) return alert("Por favor confirma el horario.");
         const n = document.getElementById('nombre').value; const p = document.getElementById('pago').value;
         if(!n || cart.length === 0 || !p) return alert("Faltan datos.");
-        let det = cart.map(it => `${it.name}`).join(" | ");
-        enviarAGoogleSheets({ nombre: n, modalidad: document.getElementById('modalidad').value, pedido: det, total: totalGlobal, pago: p, notas: document.getElementById('observaciones').value });
+        
         let msg = `*PEDIDO PATAGON*%0A👤 *Cliente:* ${n}%0A📍 *MOD:* ${document.getElementById('modalidad').value.toUpperCase()}%0A%0A`;
         cart.forEach((it) => { msg += `🍴 *${it.name}* ${it.ent} ${it.pri} ${it.pts}%0A`; });
         if(p === 'Transferencia') msg += `%0A📸 *ADJUNTA COMPROBANTE AQUÍ.*`;
@@ -205,4 +216,4 @@
     }
 </script>
 </body>
-    </html>
+        </html>
