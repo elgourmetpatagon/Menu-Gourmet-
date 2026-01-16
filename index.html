@@ -2,44 +2,45 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Gourmet Patagon - Pedidos</title>
     <style>
         :root { --primary: #e67e22; --dark: #2c3e50; --success: #25d366; --bg: #fdfaf6; --danger: #e74c3c; --blue: #3498db; --gold: #f1c40f; --win: #27ae60; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); padding: 10px; margin: 0; -webkit-tap-highlight-color: transparent; }
-        .container { max-width: 480px; margin: auto; background: white; padding: 20px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-        .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
-        .step-title { font-size: 0.9rem; color: var(--primary); text-transform: uppercase; font-weight: 800; margin: 15px 0 10px; border-bottom: 1px solid #eee; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); padding: 5px; margin: 0; -webkit-tap-highlight-color: transparent; }
+        .container { max-width: 480px; margin: auto; background: white; padding: 15px; border-radius: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        .header { text-align: center; margin-bottom: 15px; border-bottom: 2px solid var(--primary); padding-bottom: 8px; }
+        .header h2 { margin: 0; font-size: 1.3rem; }
+        .header span { font-size: 0.8rem; }
         
-        /* Animaciones y Efectos */
-        .highlight-retiro { background: #e8f5e9 !important; border: 2px solid #27ae60 !important; animation: pulse-green 2s infinite !important; }
-        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(39, 174, 96, 0); } 100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); } }
+        .step-title { font-size: 0.8rem; color: var(--primary); text-transform: uppercase; font-weight: 800; margin: 10px 0 8px; border-bottom: 1px solid #eee; }
         
-        .btn-add { background: #95a5a6; color: white; padding: 16px; margin-top: 10px; width: 100%; border-radius: 12px; font-weight: 800; border: none; cursor: pointer; transition: all 0.3s ease; font-size: 1rem; }
-        .btn-add-active { background: var(--primary) !important; animation: glow-orange 1.5s infinite; transform: scale(1.02); }
-        @keyframes glow-orange { 0% { box-shadow: 0 0 5px #e67e22; } 50% { box-shadow: 0 0 20px #e67e22; transform: scale(1.04); } 100% { box-shadow: 0 0 5px #e67e22; } }
+        /* Ajustes de Escala Móvil */
+        input[type="text"], select, textarea { width: 100%; padding: 10px; margin-bottom: 6px; border-radius: 8px; border: 1px solid #ddd; box-sizing: border-box; font-size: 14px; }
+        
+        .logistica-box { background: #fff5eb; padding: 12px; border-radius: 12px; border: 1px solid var(--primary); margin-bottom: 10px; }
+        .confirm-frame { border: 1px solid var(--danger); padding: 8px; border-radius: 8px; background: #fff1f0; display: flex; align-items: center; gap: 8px; margin-top: 5px; }
+        .confirm-frame label { font-size: 0.75rem; font-weight: bold; color: var(--danger); line-height: 1.1; }
 
-        @keyframes shake-cart { 0% { transform: translateX(0); } 25% { transform: translateX(-5px) rotate(-1deg); } 50% { transform: translateX(5px) rotate(1deg); } 75% { transform: translateX(-5px); } 100% { transform: translateX(0); } }
+        .grid-combos { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+        .combo-card { border: 2px solid #f0f0f0; padding: 8px; border-radius: 12px; text-align: center; cursor: pointer; position: relative; display: flex; flex-direction: column; justify-content: center; min-height: 80px; }
+        .combo-card b { font-size: 0.85rem; }
+        .combo-card span { font-size: 0.65rem; color: #666; margin: 1px 0; }
+        .combo-card i { font-size: 0.85rem; color: var(--primary); font-weight: 800; }
+
+        .btn-add { background: #95a5a6; color: white; padding: 12px; margin-top: 8px; width: 100%; border-radius: 10px; font-weight: 800; border: none; font-size: 0.9rem; }
+        .btn-add-active { background: var(--primary) !important; animation: glow-orange 1.5s infinite; }
+        @keyframes glow-orange { 0% { box-shadow: 0 0 5px #e67e22; } 50% { box-shadow: 0 0 15px #e67e22; } 100% { box-shadow: 0 0 5px #e67e22; } }
+
+        .ahorro-box { background: #eafaf1; border: 1px dashed var(--win); border-radius: 10px; padding: 10px; margin: 8px 0; display: none; text-align: center; color: var(--win); font-weight: 700; font-size: 0.8rem; }
+        .total-banner { background: var(--dark); color: white; padding: 12px; border-radius: 12px; text-align: center; font-weight: bold; font-size: 1.1rem; margin: 10px 0; }
+        .btn-send { background: var(--success); color: white; padding: 15px; font-size: 1.1rem; width: 100%; border-radius: 12px; font-weight: bold; border: none; }
+
+        /* Otros Elementos */
+        .check-row-vertical { display: flex; align-items: center; gap: 8px; font-weight: bold; background: #fff; padding: 8px; border-radius: 8px; border: 1px solid #eee; font-size: 0.8rem; margin-top: 3px; }
+        .selector-box { background: #f9f9f9; padding: 10px; border-radius: 10px; margin-bottom: 8px; border-left: 4px solid var(--primary); font-size: 0.85rem; }
+        #promo-box { padding: 10px; border-radius: 12px; font-size: 0.85rem; margin-bottom: 10px; }
+        @keyframes shake-cart { 0% { transform: translateX(0); } 25% { transform: translateX(-3px); } 50% { transform: translateX(3px); } 100% { transform: translateX(0); } }
         .shake { animation: shake-cart 0.4s ease-in-out; }
-
-        .ahorro-box { background: #eafaf1; border: 2px dashed var(--win); border-radius: 15px; padding: 12px; margin: 10px 0; display: none; text-align: center; color: var(--win); font-weight: 700; font-size: 0.9rem; }
-
-        .logistica-box { background: #fff5eb; padding: 15px; border-radius: 15px; border: 1px solid var(--primary); margin-bottom: 15px; }
-        .confirm-frame { border: 2px solid var(--danger); padding: 10px; border-radius: 10px; background: #fff1f0; display: flex; flex-direction: row; align-items: center; gap: 10px; margin-top: 10px; }
-        .grid-combos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
-        .combo-card { border: 2px solid #f0f0f0; padding: 10px; border-radius: 15px; text-align: center; cursor: pointer; position: relative; display: flex; flex-direction: column; justify-content: center; min-height: 95px; }
-        .combo-card input { position: absolute; opacity: 0; }
-        .combo-card:has(input:checked) { border-color: var(--primary); background: #fff5eb; }
-        .combo-card b { font-size: 0.95rem; }
-        .combo-card i { font-style: normal; font-size: 0.9rem; color: var(--primary); font-weight: 800; }
-        
-        #promo-box { background: #fff9db; padding: 12px; border-radius: 15px; border: 2px solid var(--gold); margin-bottom: 15px; display: none; text-align: center; animation: pulse-yellow 2s infinite; cursor: pointer; }
-        @keyframes pulse-yellow { 0% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0.7); } 70% { box-shadow: 0 0 0 12px rgba(241, 196, 15, 0); } 100% { box-shadow: 0 0 0 0 rgba(241, 196, 15, 0); } }
-        .check-row-vertical { display: flex; align-items: center; gap: 10px; font-weight: bold; background: #fff; padding: 10px; border-radius: 10px; border: 1px solid #eee; cursor: pointer; font-size: 0.88rem; margin-top: 4px; }
-        .selector-box { background: #f9f9f9; padding: 12px; border-radius: 15px; margin-bottom: 10px; display: none; border-left: 5px solid var(--primary); }
-        .total-banner { background: var(--dark); color: white; padding: 15px; border-radius: 15px; text-align: center; font-weight: bold; font-size: 1.2rem; margin: 15px 0; }
-        .btn-send { background: var(--success); color: white; padding: 20px; font-size: 1.2rem; width: 100%; border-radius: 12px; font-weight: bold; border: none; cursor: pointer; }
-        input[type="text"], select, textarea { width: 100%; padding: 12px; margin-bottom: 8px; border-radius: 10px; border: 1px solid #ddd; box-sizing: border-box; font-size: 16px; }
     </style>
 </head>
 <body>
@@ -62,14 +63,14 @@
             <option value="0">Centro hasta Victoria (GRATIS 🚚)</option>
             <option value="1500">Victoria hacia 🏔️ (+$1.500)</option>
         </select>
-        <div id="msg-retiro" style="display:none; background:#e8f5e9; padding:10px; border-radius:10px; font-size:0.75rem; color:#1b5e20; margin-bottom:10px; border:1px solid #27ae60;">
+        <div id="msg-retiro" style="display:none; background:#e8f5e9; padding:8px; border-radius:8px; font-size:0.7rem; color:#1b5e20; margin-bottom:8px; border:1px solid #27ae60;">
             ⚠️ <b>IMPORTANTE RETIRO:</b> Horario entre 12:30 a 12:45 hrs.
         </div>
-        <div id="msg-victoria" style="display:none; background:#fff3e0; padding:10px; border-radius:10px; font-size:0.75rem; color:#e65100; margin-bottom:10px; border:1px solid #ff9800;">
-            🏔️ <b>AVISO RUTA:</b> Para Victoria, horario estimado entre <b>13:30 y 14:00</b>.
+        <div id="msg-victoria" style="display:none; background:#fff3e0; padding:8px; border-radius:8px; font-size:0.7rem; color:#e65100; margin-bottom:8px; border:1px solid #ff9800;">
+            🏔️ <b>AVISO RUTA:</b> Para Victoria, llegada entre <b>13:30 y 14:00</b>.
         </div>
         <div class="confirm-frame">
-            <input type="checkbox" id="acepta_horario" style="width:22px; height:22px;">
+            <input type="checkbox" id="acepta_horario" style="width:18px; height:18px;">
             <label for="acepta_horario">Confirmo mi pedido y horarios (Toma hasta 12:15) ✅</label>
         </div>
     </div>
@@ -77,37 +78,37 @@
     <div class="step-title">2. Arma tu Plato 🧩</div>
     <div class="grid-combos">
         <label class="combo-card"><input type="radio" name="combo" value="7500" data-name="Menú A" onclick="checkUI('A')"><b>Menú A</b><span>Principal</span><i>$7.500</i></label>
-        <label class="combo-card"><input type="radio" name="combo" value="8500" data-name="Menú B" onclick="checkUI('B')"><b>Menú B</b><span>Entrante+Principal</span><i>$8.500</i></label>
+        <label class="combo-card"><input type="radio" name="combo" value="8500" data-name="Menú B" onclick="checkUI('B')"><b>Menú B</b><span>Entr+Princ</span><i>$8.500</i></label>
         <label class="combo-card"><input type="radio" name="combo" value="3500" data-name="Sopa/Crema" onclick="checkUI('S')"><b>Sopa/Crema</b><span>500cc</span><i>$3.500</i></label>
-        <label class="combo-card"><input type="radio" name="combo" value="3500" data-name="Dulce" onclick="checkUI('D')"><b>Dulce</b><span>Endulza tu Día</span><i>$3.500</i></label>
+        <label class="combo-card"><input type="radio" name="combo" value="3500" data-name="Dulce" onclick="checkUI('D')"><b>Dulce</b><span>Postre</span><i>$3.500</i></label>
     </div>
 
-    <div id="promo-box" onclick="aplicarPromo()">
-        <span>🥞🍯🍓</span><br><b>¡EXPERIENCIA COMPLETA!</b>
-        <small>Suma tu Dulce por solo <b>+$2.000</b>. ¡Pincha aquí! ✨</small>
+    <div id="promo-box" onclick="aplicarPromo()" style="background: #fff9db; border: 2px solid var(--gold); display:none; text-align:center; cursor:pointer;">
+        <b>🥞 ¡EXPERIENCIA COMPLETA!</b><br>
+        <small>Suma tu Dulce por solo <b>+$2.000</b> ✨</small>
     </div>
 
     <div id="ui-entrante" class="selector-box"><b>Entrante:</b><select id="entrante_val"><option value="Sopa/Crema">🥣 Sopa/Crema</option><option value="Mix de Temporada">🥗 Mix de Temporada</option></select></div>
     
     <div id="ui-principal" class="selector-box"><b>Principal:</b><select id="principal_val" onchange="toggleProt()"><option value="Plato del Día">🥘 Plato del Día</option><option value="La Gran Ensalada">🥗 La Gran Ensalada</option></select>
-        <div id="ui-prot" style="display:none; margin-top:10px;">
-            <b>Elija 2 Proteínas:</b>
-            <label class="check-row-vertical"><input type="checkbox" class="p-check" value="Quinoa"> Quinoa 🥗</label>
-            <label class="check-row-vertical"><input type="checkbox" class="p-check" value="Huevo"> Huevo 🥚</label>
-            <label class="check-row-vertical"><input type="checkbox" class="p-check" value="Lentejas"> Lentejas 🥘</label>
-            <label class="check-row-vertical"><input type="checkbox" class="p-check" value="Ave"> Ave 🍗</label>
+        <div id="ui-prot" style="display:none; margin-top:8px;">
+            <b style="font-size:0.75rem;">Elija 2 Proteínas:</b>
+            <label class="check-row-vertical"><input type="checkbox" class="p-check" value="Quinoa"> Quinoa</label>
+            <label class="check-row-vertical"><input type="checkbox" class="p-check" value="Huevo"> Huevo</label>
+            <label class="check-row-vertical"><input type="checkbox" class="p-check" value="Lentejas"> Lentejas</label>
+            <label class="check-row-vertical"><input type="checkbox" class="p-check" value="Ave"> Ave</label>
         </div>
     </div>
 
     <div class="step-title">Complementos ✨</div>
     <label class="check-row-vertical"><input type="checkbox" id="bamboo" onchange="render()"> 🎋 Cubiertos Bamboo (+$1.000)</label>
     <label class="check-row-vertical"><input type="checkbox" id="jugo" onchange="render()"> 🍋 Dressing Cítrico (+$1.000)</label>
-    <label class="check-row-vertical"><input type="checkbox" id="extra_prot" onchange="render()"> 🥩 Proteína Extra Ensalada (+$1.000)</label>
+    <label class="check-row-vertical"><input type="checkbox" id="extra_prot" onchange="render()"> 🥩 Proteína Extra (+$1.000)</label>
 
     <button id="btn-add-main" onclick="addItem()" class="btn-add">➕ AÑADIR SELECCIÓN</button>
     
-    <div id="resumen_visual" style="display:none; margin-top:20px;">
-        <div id="items_cart" style="background:#fff; border:1px solid #eee; border-radius:15px; padding:10px;"></div>
+    <div id="resumen_visual" style="display:none; margin-top:15px;">
+        <div id="items_cart" style="background:#fff; border:1px solid #eee; border-radius:12px; padding:8px;"></div>
         <div id="ahorro_box" class="ahorro-box"></div>
     </div>
 
@@ -118,14 +119,14 @@
         <option value="Efectivo">💵 Efectivo</option>
     </select>
 
-    <div id="info-tr" style="display:none; background:#eef2f7; padding:15px; border-radius:15px; border:2px solid var(--blue); margin-top:10px; font-size:0.85rem;">
+    <div id="info-tr" style="display:none; background:#eef2f7; padding:12px; border-radius:10px; border:1px solid var(--blue); margin-top:8px; font-size:0.8rem;">
         <b>BCI Cta Corriente: 30763118</b><br>Alex Berrios | 15.841.237-3
-        <button onclick="copyData()" style="margin-top:10px; background:var(--blue); color:white; padding:10px; width:100%; border-radius:8px; border:none; font-weight:bold;">📋 COPIAR DATOS</button>
+        <button onclick="copyData()" style="margin-top:8px; background:var(--blue); color:white; padding:8px; width:100%; border-radius:6px; border:none; font-weight:bold; font-size:0.75rem;">📋 COPIAR DATOS</button>
     </div>
 
-    <div id="info-ef" style="display:none; margin-top:10px;"><input type="number" id="paga_con" placeholder="¿Con cuánto pagas?" onkeyup="calcVuelto()"><div id="vuelto_resultado" style="background:#dcfce7; padding:10px; border-radius:10px; font-weight:bold; margin-top:5px;"></div></div>
+    <div id="info-ef" style="display:none; margin-top:8px;"><input type="number" id="paga_con" placeholder="¿Con cuánto pagas?" onkeyup="calcVuelto()"><div id="vuelto_resultado" style="background:#dcfce7; padding:8px; border-radius:8px; font-weight:bold; font-size:0.8rem; margin-top:4px;"></div></div>
 
-    <textarea id="observaciones" rows="2" style="margin-top:15px;">🤤👨🏽‍🍳😋💪🏽</textarea>
+    <textarea id="observaciones" rows="2" style="margin-top:10px;">🤤👨🏽‍🍳😋💪🏽</textarea>
     <div class="total-banner" id="total_final">TOTAL: $0</div>
     <button class="btn-send" onclick="send()">ENVIAR PEDIDO ✅</button>
 </div>
@@ -140,9 +141,7 @@
     }
 
     function aplicarPromo(){
-        if(!cart.some(it => it.name.includes("Menú"))){
-            alert("⚠️ Añade un Menú A o B primero."); return;
-        }
+        if(!cart.some(it => it.name.includes("Menú"))){ alert("⚠️ Añade un Menú primero."); return; }
         cart.push({ name: "Dulce (Promo)", price: 2000, ent: "", pri: "", pts: "", extras: {bamboo:false, jugo:false, extra_prot:false}, isPromo: true});
         triggerCartAnim(); render();
     }
@@ -153,14 +152,13 @@
     }
 
     function toggleProt(){ document.getElementById('ui-prot').style.display=(document.getElementById('principal_val').value==='La Gran Ensalada')?'block':'none'; }
-    function copyData(){ navigator.clipboard.writeText("BCI 30763118, Alex Berrios, 15.841.237-3"); alert("Datos."); }
+    function copyData(){ navigator.clipboard.writeText("BCI 30763118, Alex Berrios, 15.841.237-3"); alert("Copiado."); }
 
     function addItem(){
         const c = document.querySelector('input[name="combo"]:checked');
         const b = document.getElementById('bamboo').checked;
         const j = document.getElementById('jugo').checked;
         const ep = document.getElementById('extra_prot').checked;
-        
         if(c){
             const isE = document.getElementById('principal_val').value==='La Gran Ensalada' && (c.dataset.name.includes('Menú'));
             const pts = Array.from(document.querySelectorAll('.p-check:checked')).map(p => p.value);
@@ -172,9 +170,7 @@
             if(j) cart.push({ name: "Solo Dressing 🍋", price: 1000, ent:"", pri:"", pts:"", extras: {bamboo:false, jugo:false, extra_prot:false}});
             if(ep) cart.push({ name: "Solo Proteína Extra 🥩", price: 1000, ent:"", pri:"", pts:"", extras: {bamboo:false, jugo:false, extra_prot:false}});
         } else { return alert("Selecciona algo."); }
-        
-        triggerCartAnim();
-        document.querySelectorAll('.p-check').forEach(p => p.checked = false);
+        triggerCartAnim(); document.querySelectorAll('.p-check').forEach(p => p.checked = false);
         ['bamboo','jugo','extra_prot'].forEach(id => document.getElementById(id).checked = false);
         render();
     }
@@ -182,45 +178,27 @@
     function render(){
         const itemsDiv = document.getElementById('items_cart'); itemsDiv.innerHTML = ""; let sub = 0;
         document.getElementById('resumen_visual').style.display = cart.length > 0 ? "block" : "none";
-        
         ahorroAcumulado = 0;
         cart.forEach((it, i) => {
             let itemTotal = it.price;
             if(it.extras.bamboo) itemTotal += 1000; if(it.extras.jugo) itemTotal += 1000; if(it.extras.extra_prot) itemTotal += 1000;
-            sub += itemTotal;
-            if(it.isPromo) ahorroAcumulado += 1500;
-            itemsDiv.innerHTML += `<div style="background:#f8f9fa; padding:10px; border-radius:8px; margin-bottom:5px; border-left:4px solid var(--primary); display:flex; justify-content:space-between; align-items:center; font-size:0.85rem;"><div><b>${it.name}</b><br><small>${it.ent} ${it.pri} ${it.pts}</small></div><div><b>$${itemTotal}</b> <span onclick="cart.splice(${i},1);render()" style="color:red; cursor:pointer; font-weight:bold; margin-left:10px;">×</span></div></div>`;
+            sub += itemTotal; if(it.isPromo) ahorroAcumulado += 1500;
+            itemsDiv.innerHTML += `<div style="background:#f8f9fa; padding:8px; border-radius:6px; margin-bottom:4px; border-left:3px solid var(--primary); display:flex; justify-content:space-between; align-items:center; font-size:0.75rem;"><div><b>${it.name}</b><br><small>${it.ent} ${it.pri} ${it.pts}</small></div><div><b>$${itemTotal}</b> <span onclick="cart.splice(${i},1);render()" style="color:red; font-weight:bold; margin-left:8px;">×</span></div></div>`;
         });
-
         const mod = document.getElementById('modalidad').value;
         const pago = document.getElementById('pago').value;
         if(mod === 'retiro') ahorroAcumulado += 500;
         if(pago === 'Transferencia') ahorroAcumulado += 500;
-
         const ahorroBox = document.getElementById('ahorro_box');
-        if(ahorroAcumulado > 0){
-            ahorroBox.style.display = 'block';
-            ahorroBox.innerHTML = `✨ ¡Llevas ganando $${ahorroAcumulado.toLocaleString('es-CL')} en beneficios! ✨`;
-        } else { ahorroBox.style.display = 'none'; }
-
-        const algoSeleccionado = document.querySelector('input[name="combo"]:checked') || document.getElementById('bamboo').checked || document.getElementById('jugo').checked || document.getElementById('extra_prot').checked;
+        if(ahorroAcumulado > 0){ ahorroBox.style.display = 'block'; ahorroBox.innerHTML = `✨ ¡Ahorraste $${ahorroAcumulado.toLocaleString('es-CL')}! ✨`; } else { ahorroBox.style.display = 'none'; }
+        const algoSel = document.querySelector('input[name="combo"]:checked') || document.getElementById('bamboo').checked || document.getElementById('jugo').checked || document.getElementById('extra_prot').checked;
         const btnAdd = document.getElementById('btn-add-main');
-        if(algoSeleccionado) { btnAdd.classList.add('btn-add-active'); } else { btnAdd.classList.remove('btn-add-active'); }
-
+        if(algoSel) { btnAdd.classList.add('btn-add-active'); } else { btnAdd.classList.remove('btn-add-active'); }
         document.getElementById('promo-box').style.display = cart.some(it => it.name.includes("Menú")) ? 'block' : 'none';
         const zona = document.getElementById('zona').value;
         const logBox = document.getElementById('log-box');
-        
-        if(mod === 'retiro') {
-            logBox.classList.add('highlight-retiro');
-            document.getElementById('msg-retiro').style.display = 'block';
-            document.getElementById('msg-victoria').style.display = 'none';
-        } else {
-            logBox.classList.remove('highlight-retiro');
-            document.getElementById('msg-retiro').style.display = 'none';
-            document.getElementById('msg-victoria').style.display = (zona === '1500') ? 'block' : 'none';
-        }
-
+        if(mod === 'retiro') { logBox.classList.add('highlight-retiro'); document.getElementById('msg-retiro').style.display = 'block'; document.getElementById('msg-victoria').style.display = 'none';
+        } else { logBox.classList.remove('highlight-retiro'); document.getElementById('msg-retiro').style.display = 'none'; document.getElementById('msg-victoria').style.display = (zona === '1500') ? 'block' : 'none'; }
         totalGlobal = sub + (mod === 'reparto' ? parseInt(zona) : -500) + (pago === 'Transferencia' ? -500 : 0);
         document.getElementById('total_final').innerText = "TOTAL: $" + totalGlobal.toLocaleString('es-CL');
         document.getElementById('info-tr').style.display = (pago === 'Transferencia') ? 'block' : 'none';
@@ -240,18 +218,12 @@
         if(ahora > limite) return alert("⏰ Pedidos cerrados.");
         if(!document.getElementById('acepta_horario').checked) return alert("Confirma el horario.");
         if(!document.getElementById('nombre').value || cart.length === 0 || !document.getElementById('pago').value) return alert("Faltan datos.");
-        
         let msg = `*PEDIDO PATAGON*%0A👤 *Cliente:* ${document.getElementById('nombre').value}%0A📍 *MOD:* ${document.getElementById('modalidad').value.toUpperCase()}%0A%0A`;
         cart.forEach((it) => { msg += `🍴 *${it.name}* ${it.ent} ${it.pri} ${it.pts}%0A`; });
-        
-        // Inserción del resumen de ahorro en el mensaje
-        if(ahorroAcumulado > 0) {
-            msg += `%0A✨ *AHORRO TOTAL GOURMET: $${ahorroAcumulado.toLocaleString('es-CL')}* ✨%0A`;
-        }
-        
-        msg += `%0A💰 *TOTAL A PAGAR: $${totalGlobal.toLocaleString('es-CL')}*%0A💳 *Pago:* ${document.getElementById('pago').value}%0A📝 ${document.getElementById('observaciones').value}`;
+        if(ahorroAcumulado > 0) { msg += `%0A✨ *AHORRO GOURMET: $${ahorroAcumulado.toLocaleString('es-CL')}* ✨%0A`; }
+        msg += `%0A💰 *TOTAL: $${totalGlobal.toLocaleString('es-CL')}*%0A💳 *Pago:* ${document.getElementById('pago').value}%0A📝 ${document.getElementById('observaciones').value}`;
         window.open(`https://wa.me/56994004188?text=${msg}`);
     }
 </script>
 </body>
-            </html>
+    </html>
