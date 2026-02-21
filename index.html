@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gourmet Patagon v28.0</title>
+    <title>Gourmet Patagon - Pedidos</title>
     <style>
+        /* CSS v27.1 ORIGINAL - INALTERADO */
         :root { --primary: #e67e22; --dark: #2c3e50; --success: #25d366; --bg: #fdfaf6; --danger: #e74c3c; --blue: #3498db; --gold: #f1c40f; --win: #27ae60; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: var(--dark); padding: 10px; margin: 0; -webkit-tap-highlight-color: transparent; }
         .container { max-width: 480px; margin: auto; background: white; padding: 20px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .header { text-align: center; margin-bottom: 20px; border-bottom: 2px solid var(--primary); padding-bottom: 10px; }
         .step-title { font-size: 0.9rem; color: var(--primary); text-transform: uppercase; font-weight: 800; margin: 15px 0 10px; border-bottom: 1px solid #eee; }
         
-        /* Animaciones */
         .highlight-retiro { background: #e8f5e9 !important; border: 2px solid #27ae60 !important; animation: pulse-green 2s infinite !important; }
         @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(39, 174, 96, 0); } 100% { box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); } }
         
@@ -23,6 +23,8 @@
         .shake { animation: shake-cart 0.4s ease-in-out; }
 
         .ahorro-box { background: #eafaf1; border: 2px dashed var(--win); border-radius: 15px; padding: 12px; margin: 10px 0; display: none; text-align: center; color: var(--win); font-weight: 700; font-size: 0.9rem; }
+        .logistica-box { background: #fff5eb; padding: 15px; border-radius: 15px; border: 1px solid var(--primary); margin-bottom: 15px; }
+        .confirm-frame { border: 2px solid var(--danger); padding: 10px; border-radius: 10px; background: #fff1f0; display: flex; flex-direction: row; align-items: center; gap: 10px; margin-top: 10px; }
         .grid-combos { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px; }
         .combo-card { border: 2px solid #f0f0f0; padding: 10px; border-radius: 15px; text-align: center; cursor: pointer; position: relative; display: flex; flex-direction: column; justify-content: center; min-height: 95px; }
         .combo-card input { position: absolute; opacity: 0; }
@@ -60,21 +62,21 @@
             <option value="1500">Victoria hacia 🏔️ (+$1.500)</option>
         </select>
         <div id="msg-retiro" style="display:none; background:#e8f5e9; padding:10px; border-radius:10px; font-size:0.75rem; color:#1b5e20; margin-bottom:10px; border:1px solid #27ae60;">
-            ⚠️ <b>IMPORTANTE RETIRO:</b> Horario entre 12:30 a 12:45 hrs.
+            ⚠️ <b>IMPORTANTE RETIRO:</b> Horario entre 12:30 a 12:45 hrs. De lo contrario, se dispondrán en cooler para mantenimiento.
         </div>
         <div id="msg-victoria" style="display:none; background:#fff3e0; padding:10px; border-radius:10px; font-size:0.75rem; color:#e65100; margin-bottom:10px; border:1px solid #ff9800;">
-            🏔️ <b>AVISO RUTA:</b> Para Victoria, horario estimado entre 13:30 y 14:00.
+            🏔️ <b>AVISO RUTA:</b> Para Victoria, horario estimado entre <b>13:30 y 14:00</b>.
         </div>
-        <div style="border: 2px solid var(--danger); padding: 10px; border-radius: 10px; background: #fff1f0; display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+        <div class="confirm-frame">
             <input type="checkbox" id="acepta_horario" style="width:22px; height:22px;">
-            <label for="acepta_horario" style="font-size:0.82rem; font-weight:bold; color:var(--danger);">Confirmo mi pedido y horarios (Toma hasta 12:15) ✅</label>
+            <label for="acepta_horario" style="font-size: 0.85rem; font-weight: bold;">Confirmo mi pedido y horarios (Toma hasta 12:15) ✅</label>
         </div>
     </div>
 
     <div class="step-title">2. Arma tu Plato 🧩</div>
     <div class="grid-combos">
         <label class="combo-card"><input type="radio" name="combo" value="7500" data-name="Menú A" onclick="checkUI('A')"><b>Menú A</b><span>Principal</span><i>$7.500</i></label>
-        <label class="combo-card"><input type="radio" name="combo" value="8500" data-name="Menú B" onclick="checkUI('B')"><b>Menú B</b><span>Entrante+Prin.</span><i>$8.500</i></label>
+        <label class="combo-card"><input type="radio" name="combo" value="8500" data-name="Menú B" onclick="checkUI('B')"><b>Menú B</b><span>Entrante+Principal</span><i>$8.500</i></label>
         <label class="combo-card"><input type="radio" name="combo" value="3500" data-name="Sopa/Crema" onclick="checkUI('S')"><b>Sopa/Crema</b><span>500cc</span><i>$3.500</i></label>
         <label class="combo-card"><input type="radio" name="combo" value="3500" data-name="Dulce" onclick="checkUI('D')"><b>Dulce</b><span>Endulza tu Día</span><i>$3.500</i></label>
     </div>
@@ -170,25 +172,23 @@
         
         if(c){
             const pts = Array.from(document.querySelectorAll('.p-check:checked')).map(p => p.value);
-            let extraPrice = 0;
-            // Lógica de proteína extra automática
+            let extraPriceAuto = 0;
+            // Lógica de cobro automático por proteína adicional solicitada
             if(document.getElementById('principal_val').value==='La Gran Ensalada' && pts.length > 2){
-                extraPrice = (pts.length - 2) * 1000;
+                extraPriceAuto = (pts.length - 2) * 1000;
             }
             cart.push({ 
-                name: c.dataset.name + (extraPrice > 0 ? " (+Proteína Extra)" : ""), 
-                price: parseInt(c.value) + extraPrice, 
-                ent: (c.dataset.name==='Menú B')?document.getElementById('entrante_val').value:'', 
-                pri: (c.dataset.name.includes('Menú'))?document.getElementById('principal_val').value:'', 
+                name: c.dataset.name + (extraPriceAuto > 0 ? " (+Prot. Extra)" : ""), 
+                price: parseInt(c.value) + extraPriceAuto, 
                 pts: pts.join("/"),
                 extras: { bamboo: b, jugo: j, yogurth: y, extra_prot: ep } 
             });
             c.checked = false;
         } else if(b || j || y || ep) {
-            if(b) cart.push({ name: "Solo Cubiertos 🎋", price: 1000 });
-            if(j) cart.push({ name: "Solo Dressing 🍋", price: 1000 });
-            if(y) cart.push({ name: "Solo Salsa Yogurth 🍋🥛", price: 1000 });
-            if(ep) cart.push({ name: "Solo Proteína Extra 🥩", price: 1000 });
+            if(b) cart.push({ name: "Cubiertos 🎋", price: 1000 });
+            if(j) cart.push({ name: "Dressing 🍋", price: 1000 });
+            if(y) cart.push({ name: "Salsa Yogurth 🍋🥛", price: 1000 });
+            if(ep) cart.push({ name: "Proteína Extra 🥩", price: 1000 });
         }
         
         triggerCartAnim();
@@ -198,7 +198,7 @@
     }
 
     function render(){
-        const itemsDiv = document.getElementById('items_cart'); itemsDiv.innerHTML = ""; let sub = 0; let ahorro = 0;
+        const itemsDiv = document.getElementById('items_cart'); itemsDiv.innerHTML = ""; let sub = 0; let ahorroTotal = 0;
         document.getElementById('resumen_visual').style.display = cart.length > 0 ? "block" : "none";
         
         let numMenus = 0; let numPromos = 0;
@@ -209,27 +209,40 @@
             if(it.extras?.yogurth) itemTotal += 1000;
             if(it.extras?.extra_prot) itemTotal += 1000;
             sub += itemTotal;
-            if(it.isPromo) { ahorro += 1500; numPromos++; }
+            if(it.isPromo) { ahorroTotal += 1500; numPromos++; }
             if(it.name.includes("Menú")) numMenus++;
             itemsDiv.innerHTML += `<div style="background:#f8f9fa; padding:10px; border-radius:8px; margin-bottom:5px; border-left:4px solid var(--primary); display:flex; justify-content:space-between; font-size:0.85rem;"><div><b>${it.name}</b><br><small>${it.pts || ''}</small></div><div>$${itemTotal} <span onclick="cart.splice(${i},1);render()" style="color:red; cursor:pointer; font-weight:bold; margin-left:10px;">×</span></div></div>`;
         });
 
-        // Lógica de visibilidad Promo: Desaparece si ya se añadió para los menús actuales
+        // Lógica de visibilidad Promo: Desaparece si ya se añadió el postre para los menús actuales
         document.getElementById('promo-box').style.display = (numMenus > numPromos) ? 'block' : 'none';
 
         const mod = document.getElementById('modalidad').value;
+        const zona = document.getElementById('zona').value;
+        const logBox = document.getElementById('log-box');
+        
+        if(mod === 'retiro') {
+            logBox.classList.add('highlight-retiro');
+            document.getElementById('msg-retiro').style.display = 'block';
+            document.getElementById('msg-victoria').style.display = 'none';
+            ahorroTotal += 500;
+        } else {
+            logBox.classList.remove('highlight-retiro');
+            document.getElementById('msg-retiro').style.display = 'none';
+            document.getElementById('msg-victoria').style.display = (zona === '1500') ? 'block' : 'none';
+        }
+
         const pago = document.getElementById('pago').value;
-        if(mod === 'retiro') ahorro += 500;
-        if(pago === 'Transferencia') ahorro += 500;
+        if(pago === 'Transferencia') ahorroTotal += 500;
 
         const aBox = document.getElementById('ahorro_box');
-        if(ahorro > 0){ aBox.style.display = 'block'; aBox.innerHTML = `✨ ¡Llevas ganando $${ahorro.toLocaleString('es-CL')} en beneficios! ✨`; }
+        if(ahorroTotal > 0){ aBox.style.display = 'block'; aBox.innerHTML = `✨ ¡Llevas ganando $${ahorroTotal.toLocaleString('es-CL')} en beneficios! ✨`; }
         else { aBox.style.display = 'none'; }
 
-        const algoSeleccionado = document.querySelector('input[name="combo"]:checked') || document.getElementById('bamboo').checked || document.getElementById('jugo').checked || document.getElementById('yogurth').checked;
-        document.getElementById('btn-add-main').classList.toggle('btn-add-active', !!algoSeleccionado);
+        const algoSel = document.querySelector('input[name="combo"]:checked') || document.getElementById('bamboo').checked || document.getElementById('jugo').checked || document.getElementById('yogurth').checked;
+        document.getElementById('btn-add-main').classList.toggle('btn-add-active', !!algoSel);
 
-        totalGlobal = sub + (mod === 'reparto' ? parseInt(document.getElementById('zona').value) : -500) + (pago === 'Transferencia' ? -500 : 0);
+        totalGlobal = sub + (mod === 'reparto' ? parseInt(zona) : -500) + (pago === 'Transferencia' ? -500 : 0);
         document.getElementById('total_final').innerText = "TOTAL: $" + totalGlobal.toLocaleString('es-CL');
         document.getElementById('info-tr').style.display = (pago === 'Transferencia') ? 'block' : 'none';
     }
@@ -243,4 +256,5 @@
     }
 </script>
 </body>
-</html>
+    </html>
+    
